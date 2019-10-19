@@ -99,7 +99,7 @@ AVPacket * Demux::Read()
 	//×ª»»ptsÎªºÁÃë
 	pkt->pts = pkt->pts * (PlayerUtility::Get()->r2d(afc->streams[videoStreamIndex]->time_base) * 1000);
 	pkt->dts = pkt->dts * (PlayerUtility::Get()->r2d(afc->streams[videoStreamIndex]->time_base) * 1000);
-	qDebug() << "pts:" << pkt->pts;
+	//qDebug() << "pts:" << pkt->pts;
 	return pkt;
 }
 
@@ -130,6 +130,14 @@ AVCodecParameters* Demux::GetMediaParameters(AVMediaType type)
 	else
 		throw "current version not support this parameters";
 	return pa;
+}
+
+bool Demux::IsVideo(AVPacket *pkt)
+{
+	if (!pkt) return false;
+	if (pkt->stream_index == audioStreamIndex)
+		return false;
+	return true;
 }
 
 void Demux::Clear()

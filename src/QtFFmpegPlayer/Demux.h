@@ -29,6 +29,8 @@ public:
 	//目前只支持AVMEDIA_TYPE_VIDEO和AVMEDIA_TYPE_AUDIO
 	AVCodecParameters* GetMediaParameters(AVMediaType type);
 
+	bool IsVideo(AVPacket *pkt);
+
 	//清空读取数据缓存
 	void Clear();
 	void Close();

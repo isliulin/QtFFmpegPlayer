@@ -10,6 +10,6 @@ class QtFFmpegPlayer : public QWidget
 public:
 	QtFFmpegPlayer(QWidget *parent = Q_NULLPTR);
 
-private:
+public:
 	Ui::QtFFmpegPlayerClass ui;
 };
