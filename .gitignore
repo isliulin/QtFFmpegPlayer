@@ -1,3 +1,6 @@
 src/QtFFmpegPlayer/.vs
 src/QtFFmpegPlayer/GeneratedFiles
 src/QtFFmpegPlayer/x64
+bin/QtFFmpegPlayer.exe
+*.ilk
+*.pdb
