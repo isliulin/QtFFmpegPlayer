@@ -19,7 +19,7 @@ public:
 	void Repaint(AVFrame *frame);
 
 	//绘制YUV数据
-	void Repaint2(unsigned char* yuv);
+	void Repaint2(unsigned char* yuv[]);
 protected:
 	//刷新显示
 	void paintGL();
@@ -39,8 +39,8 @@ private:
 	//opengltexture地址
 	GLuint texs[3] = { 0 };
 
-	int width = 0;
-	int height = 0;
+	int width = 1920;
+	int height = 1080;
 
 	unsigned char* datas[3] = { 0 };
 };

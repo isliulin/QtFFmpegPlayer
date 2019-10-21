@@ -13,11 +13,11 @@
   <property name="windowTitle">
    <string>QtFFmpegPlayer</string>
   </property>
-  <widget class="VideoCanvas" name="video">
+  <widget class="VideoCanvas3" name="video">
    <property name="geometry">
     <rect>
-     <x>39</x>
-     <y>29</y>
+     <x>0</x>
+     <y>0</y>
      <width>941</width>
      <height>551</height>
     </rect>
@@ -27,9 +27,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>VideoCanvas</class>
+   <class>VideoCanvas3</class>
    <extends>QOpenGLWidget</extends>
-   <header>VideoCanvas.h</header>
+   <header>VideoCanvas3.h</header>
   </customwidget>
  </customwidgets>
  <resources>

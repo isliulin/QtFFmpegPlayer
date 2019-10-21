@@ -28,6 +28,12 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Header Files\OpenGL">
+      <UniqueIdentifier>{1b8fd4e0-dab1-4e14-96ce-f4a7d1a1988a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenGL">
+      <UniqueIdentifier>{b5f72a15-ce2f-456a-aefb-72d8ef2eeb39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,6 +52,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VideoCanvas.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoCanvas2.cpp">
+      <Filter>Source Files\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="VideoCanvas3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,7 +66,7 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="VideoCanvas.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OpenGL</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +87,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Decode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoCanvas2.h">
+      <Filter>Header Files\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VideoCanvas3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

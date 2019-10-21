@@ -134,9 +134,12 @@ void VideoCanvas::Repaint(AVFrame *frame)
 	update();
 }
 //»æÖÆYUVÊý¾Ý
-void VideoCanvas::Repaint2(unsigned char* yuv)
+void VideoCanvas::Repaint2(unsigned char* yuv[])
 {
-
+	memcpy(datas[0], yuv[0], width * height);
+	memcpy(datas[1], yuv[1], width * height / 4);
+	memcpy(datas[2], yuv[2], width * height / 4);
+	update();
 }
 
 void VideoCanvas::paintGL()

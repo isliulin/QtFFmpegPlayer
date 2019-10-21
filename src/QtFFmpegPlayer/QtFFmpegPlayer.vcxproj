@@ -119,6 +119,8 @@
     <ClCompile Include="PlayerUtility.cpp" />
     <ClCompile Include="QtFFmpegPlayer.cpp" />
     <ClCompile Include="VideoCanvas.cpp" />
+    <ClCompile Include="VideoCanvas2.cpp" />
+    <ClCompile Include="VideoCanvas3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="QtFFmpegPlayer.h" />
@@ -133,6 +135,9 @@
     <ClInclude Include="Decode.h" />
     <ClInclude Include="Demux.h" />
     <ClInclude Include="PlayerUtility.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="VideoCanvas2.h" />
+    <ClInclude Include="VideoCanvas3.h" />
     <QtMoc Include="VideoCanvas.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB</Define>
