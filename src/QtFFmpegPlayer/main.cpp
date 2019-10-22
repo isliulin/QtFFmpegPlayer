@@ -23,14 +23,16 @@ public:
 	Decode adecode;
 	Decode vdecode;
 	VideoCanvas* video;
+	bool isExist = false;
 	void Init()
 	{
 		qDebug() << avformat_configuration();
 		
-		demux.Open("F:/Http/Faded.mp4");
+		demux.Open("F:/Http/sbz.mp4");
+		demux.Open("F:/Http/体面 于文文.mp4");
 		//demux.Open("D:/HTTPServer/4K.mp4");
 		//demux.Open("rtmp://192.168.0.103/live/test");
-		//demux.Seek(0.98);
+		//demux.Seek(0.5);
 		
 		vdecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO));
 		vdecode.Close();
@@ -38,13 +40,21 @@ public:
 		adecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
 		video->Init(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->width, demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->height);
 	}
-	
+	~Test()
+	{
+		isExist = true;
+		video->isExit = true;
+		vdecode.Close();
+		adecode.Close();
+		demux.Close();
+		wait();
+	}
 protected:
 	void run()
 	{
 		for (;;)
 		{
-			//QThread::msleep(35);
+			if(isExist) break;
 			AVPacket* pkt = demux.Read();
 
 			if (pkt == NULL) {
@@ -74,6 +84,7 @@ protected:
 			}
 		}
 	}
+	
 };
 
 class DrawYUV : public QThread
@@ -114,6 +125,8 @@ protected:
 			fread(yuv[2], 1, 768 * 432 / 4, fp);
 
 			video->Repaint2(yuv);
+
+			QThread::msleep(20);
 		}
 	}
 };
@@ -125,15 +138,15 @@ int main(int argc, char *argv[])
 	QtFFmpegPlayer w;
 	w.show();
 
-	/*Test test;
+	Test test;
 	test.video = w.ui.video;
 	test.Init();
-	test.start();*/
+	test.start();
 
 	
 
-	//DrawYUV draw;
-	/*draw.video = w.ui.video;
+	/*DrawYUV draw;
+	draw.video = w.ui.video;
 	draw.Init();
 	draw.start();*/
 	

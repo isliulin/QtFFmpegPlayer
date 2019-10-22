@@ -1,5 +1,6 @@
 #include "PlayerUtility.h"
 #include <QDebug>
+#include <QTime>
 extern "C"
 {
 #include <libavutil/error.h>
@@ -34,4 +35,11 @@ void PlayerUtility::av_strerror2(int errnum, const char* log)
 	{
 		qDebug("out error log failed, please check");
 	}
+}
+
+int PlayerUtility::Random(int maxvalue)
+{
+	QTime time = QTime::currentTime();
+	qsrand(time.msec() * qrand() * qrand() * qrand() * qrand() * qrand() * qrand());
+	return qrand() % (maxvalue + 1);
 }

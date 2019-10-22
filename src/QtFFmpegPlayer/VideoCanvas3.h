@@ -29,8 +29,14 @@ private:
 	int width = 1920;
 	int height = 1080;
 
-	GLuint texs = 0;
+	GLuint texs[3] = {0};
 
 	unsigned char* texRawData[3] = { 0 };
+
+private:
+	
+	void run();
+
+	long long updateTime = 0;
 };
 

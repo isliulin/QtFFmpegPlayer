@@ -6,8 +6,8 @@ extern "C"
 }
 
 #define GET_STR(x) #x
-#define A_VER 0
-#define T_VER 1
+#define A_VER 3
+#define T_VER 4
 
 //顶点shader
 const char*vString = GET_STR(
@@ -96,6 +96,11 @@ void VideoCanvas::Init(int width, int height)
 
 void VideoCanvas::Repaint(AVFrame *frame)
 {
+	
+	while (isRepainting) {
+		if (isExit) return;
+	}
+	isRepainting = true;
 	if (!frame) return;
 	QMutexLocker locker(&mutex);
 	//保证尺寸正确，保证是视频帧
@@ -132,6 +137,12 @@ void VideoCanvas::Repaint(AVFrame *frame)
 	av_frame_free(&frame);
 	//刷新显示
 	update();
+
+	callUpdate++;
+	if (callUpdate % 100 == 0)
+	{
+		qDebug() << "callupdate:" << callUpdate << " update time:" << updateTime;
+	}
 }
 //绘制YUV数据
 void VideoCanvas::Repaint2(unsigned char* yuv[])
@@ -140,6 +151,11 @@ void VideoCanvas::Repaint2(unsigned char* yuv[])
 	memcpy(datas[1], yuv[1], width * height / 4);
 	memcpy(datas[2], yuv[2], width * height / 4);
 	update();
+	callUpdate++;
+	if (callUpdate % 100 == 0)
+	{
+		qDebug() << "callupdate:" << callUpdate << " update time:" << updateTime;
+	}
 }
 
 void VideoCanvas::paintGL()
@@ -166,6 +182,7 @@ void VideoCanvas::paintGL()
 	//与shader变量关联
 	glUniform1i(unis[1], 1);
 
+	
 
 
 	glActiveTexture(GL_TEXTURE2);
@@ -178,6 +195,8 @@ void VideoCanvas::paintGL()
 	glUniform1i(unis[2], 2);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	updateTime++;
+	isRepainting = false;
 }
 
 void VideoCanvas::initializeGL()
@@ -230,3 +249,4 @@ void VideoCanvas::resizeGL(int w, int h)
 {
 
 }
+

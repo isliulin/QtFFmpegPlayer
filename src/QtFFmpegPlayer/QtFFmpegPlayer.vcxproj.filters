@@ -58,7 +58,7 @@
       <Filter>Source Files\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="VideoCanvas3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,7 +96,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VideoCanvas3.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,7 +2,8 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QGLShaderProgram>
-
+#include <QThread>
+#include <QMutex>
 //////////////////////////////////////////////////////////////////////////
 //使用原始方法绘制
 class VideoCanvas2 : public QOpenGLWidget, protected QOpenGLFunctions
@@ -21,7 +22,10 @@ protected:
 	//窗口尺寸变化
 	void resizeGL(int w, int h);
 
+	void closeEvent(QCloseEvent *event);
+
 private:
+	QMutex mutex;
 
 	unsigned int CreateShader();
 
@@ -30,10 +34,15 @@ private:
 	//opengltexture地址
 	GLuint texs[3] = { 0 };
 
-	int width = 0;
-	int height = 0;
+	int width = 1920;
+	int height = 1080;
 
-	unsigned char* texRawData[3] = { 0 };
+	unsigned char* texRawData[4] = { 0 };
 
+	void run();
+
+	bool isExit = false;
+
+	int updateTime = 0;
 };
 

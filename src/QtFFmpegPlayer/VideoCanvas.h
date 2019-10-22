@@ -3,6 +3,7 @@
 #include <QOpenGLFunctions>
 #include <QGLShaderProgram>
 #include <QMutex>
+#include <QWaitCondition>
 struct AVFrame;
 class VideoCanvas : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -20,6 +21,9 @@ public:
 
 	//绘制YUV数据
 	void Repaint2(unsigned char* yuv[]);
+
+	bool isExit = false;
+
 protected:
 	//刷新显示
 	void paintGL();
@@ -29,6 +33,7 @@ protected:
 
 	//窗口尺寸变化
 	void resizeGL(int w, int h);
+
 
 private:
 	QMutex mutex;
@@ -43,5 +48,11 @@ private:
 	int height = 1080;
 
 	unsigned char* datas[3] = { 0 };
+
+	int callUpdate = 0;
+	int updateTime = 0;
+
+	bool isRepainting = false;
+	
 };
 
