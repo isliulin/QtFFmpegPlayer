@@ -24,21 +24,27 @@ public:
 	Decode vdecode;
 	VideoCanvas* video;
 	bool isExist = false;
-	void Init()
+	bool Init(const char* path = NULL)
 	{
 		qDebug() << avformat_configuration();
 		
-		demux.Open("F:/Http/sbz.mp4");
-		demux.Open("F:/Http/体面 于文文.mp4");
-		//demux.Open("D:/HTTPServer/4K.mp4");
-		//demux.Open("rtmp://192.168.0.103/live/test");
+		bool isOpenSuccess = false;
+		if (path) isOpenSuccess = demux.Open(path);
+		else
+		{
+			isOpenSuccess = demux.Open("D:/HTTPServer/4K.mp4");
+		}
 		//demux.Seek(0.5);
+		if (!isOpenSuccess)
+		{
+			qDebug() << "open failed!";
+			return false;
+		}
 		
-		vdecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO));
-		vdecode.Close();
 		vdecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO));
 		adecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
 		video->Init(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->width, demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->height);
+		return true;
 	}
 	~Test()
 	{
@@ -132,7 +138,6 @@ protected:
 };
 int main(int argc, char *argv[])
 {
-	
 
 	QApplication a(argc, argv);
 	QtFFmpegPlayer w;
@@ -140,17 +145,18 @@ int main(int argc, char *argv[])
 
 	Test test;
 	test.video = w.ui.video;
-	test.Init();
-	test.start();
-
-	
+	bool isOpenSuccess = false;
+	if (argc > 1)
+		isOpenSuccess = test.Init(argv[1]);
+	else
+		isOpenSuccess = test.Init();
+	if(isOpenSuccess)
+		test.start();
 
 	/*DrawYUV draw;
 	draw.video = w.ui.video;
 	draw.Init();
 	draw.start();*/
 	
-	
-
 	return a.exec();
 }

@@ -1,5 +1,6 @@
 #include "VideoCanvas.h"
 #include <QDebug>
+#include <QThread>
 extern "C"
 {
 #include <libavutil/frame.h>
@@ -99,6 +100,7 @@ void VideoCanvas::Repaint(AVFrame *frame)
 	
 	while (isRepainting) {
 		if (isExit) return;
+		QThread::msleep(1);
 	}
 	isRepainting = true;
 	if (!frame) return;
@@ -201,9 +203,10 @@ void VideoCanvas::paintGL()
 
 void VideoCanvas::initializeGL()
 {
-	qDebug() << "initializeGL";
+
 	QMutexLocker locker(&mutex);
 	initializeOpenGLFunctions();
+
 	//¼ÓÔØshader½Å±¾
 	qDebug() << program.addShaderFromSourceCode(QGLShader::Vertex, vString);
 	qDebug() << program.addShaderFromSourceCode(QGLShader::Fragment, tString);
