@@ -58,9 +58,9 @@ void VideoCanvas::Init(int width, int height)
 	delete datas[1];
 	delete datas[2];
 	//分配内存空间
-	datas[0] = new unsigned char[width * height];
-	datas[1] = new unsigned char[width * height / 4];
-	datas[2] = new unsigned char[width * height / 4];
+	datas[0] = new unsigned char[width * height * 10];
+	datas[1] = new unsigned char[width * height / 4 * 10];
+	datas[2] = new unsigned char[width * height / 4 * 10];
 
 	//清理
 	if (texs[0])
@@ -147,8 +147,14 @@ void VideoCanvas::Repaint(AVFrame *frame)
 	}
 }
 //绘制YUV数据
-void VideoCanvas::Repaint2(unsigned char* yuv[])
+void VideoCanvas::Repaint(unsigned char* yuv[])
 {
+	while (isRepainting) {
+		qDebug() << "draw yuv";
+		if (isExit) return;
+		QThread::msleep(1);
+	}
+	isRepainting = true;
 	memcpy(datas[0], yuv[0], width * height);
 	memcpy(datas[1], yuv[1], width * height / 4);
 	memcpy(datas[2], yuv[2], width * height / 4);

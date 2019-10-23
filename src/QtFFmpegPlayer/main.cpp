@@ -6,6 +6,8 @@
 #include "Decode.h"
 #include "VideoCanvas.h"
 #include "VideoCanvas2.h"
+#include "Resample.h"
+#include "AudioPlay.h"
 
 extern "C"
 {
@@ -14,6 +16,7 @@ extern "C"
 #pragma  comment(lib, "avformat.lib")
 #pragma  comment(lib, "avcodec.lib")
 #pragma  comment(lib, "avutil.lib")
+#pragma  comment(lib, "swresample.lib")
 
 class Test : public QThread
 {
@@ -23,6 +26,8 @@ public:
 	Decode adecode;
 	Decode vdecode;
 	VideoCanvas* video;
+	Resample resample;
+	AudioPlay aplay;
 	bool isExist = false;
 	bool Init(const char* path = NULL)
 	{
@@ -32,7 +37,10 @@ public:
 		if (path) isOpenSuccess = demux.Open(path);
 		else
 		{
-			isOpenSuccess = demux.Open("D:/HTTPServer/4K.mp4");
+			isOpenSuccess = demux.Open("F:/HTTP/Faded.mp4");
+			isOpenSuccess = demux.Open("F:/硕鼠下载/Dragon PigCNBALLERCloud Wang.mp4");
+			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/nfdw.mp4");
+			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/8K机房监控.mp4");
 		}
 		//demux.Seek(0.5);
 		if (!isOpenSuccess)
@@ -44,6 +52,8 @@ public:
 		vdecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO));
 		adecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
 		video->Init(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->width, demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->height);
+		resample.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
+		qDebug() << aplay.Open();
 		return true;
 	}
 	~Test()
@@ -56,6 +66,7 @@ public:
 		wait();
 	}
 protected:
+	unsigned char* pcm = new unsigned char[1024 * 1024];
 	void run()
 	{
 		for (;;)
@@ -75,7 +86,9 @@ protected:
 				{
 					AVFrame* frame = vdecode.Recv();
 					if (!frame) break;
+					//处理视频帧
 					video->Repaint(frame);
+					//av_frame_free(&frame);
 				}
 			}
 			else
@@ -85,7 +98,17 @@ protected:
 				{
 					AVFrame* frame = adecode.Recv();
 					if (!frame) break;
-					av_frame_free(&frame);
+					//处理音频帧
+					int len = resample.AudioResample(frame, pcm);
+					while (len > 0)
+					{
+						if (aplay.GetFree() >= len)
+						{
+							aplay.Write((char*)pcm, len);
+							break;
+						}
+						QThread::msleep(1);
+					}
 				}
 			}
 		}
@@ -100,7 +123,7 @@ public:
 	VideoCanvas* video;
 	unsigned char *yuv[3] = { 0 };
 	FILE *fp = NULL;
-	
+	bool isExist = false;
 
 	void Init()
 	{
@@ -114,12 +137,18 @@ public:
 		yuv[1] = new unsigned char[768 * 432 / 4];
 		yuv[2] = new unsigned char[768 * 432 / 4];
 	}
-
+	~DrawYUV()
+	{
+		isExist = true;
+		video->isExit = true;
+		wait();
+	}
 protected:
 	void run()
 	{
 		for (;;)
 		{
+			if(isExist) break;
 			if (feof(fp) != 0)
 			{
 				fseek(fp, 0, SEEK_SET);
@@ -130,9 +159,8 @@ protected:
 			fread(yuv[1], 1, 768 * 432 / 4, fp);
 			fread(yuv[2], 1, 768 * 432 / 4, fp);
 
-			video->Repaint2(yuv);
+			video->Repaint(yuv);
 
-			QThread::msleep(20);
 		}
 	}
 };
@@ -150,7 +178,7 @@ int main(int argc, char *argv[])
 		isOpenSuccess = test.Init(argv[1]);
 	else
 		isOpenSuccess = test.Init();
-	if(isOpenSuccess)
+	if (isOpenSuccess)
 		test.start();
 
 	/*DrawYUV draw;

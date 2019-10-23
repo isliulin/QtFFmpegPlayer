@@ -20,7 +20,7 @@ public:
 	void Repaint(AVFrame *frame);
 
 	//绘制YUV数据
-	void Repaint2(unsigned char* yuv[]);
+	void Repaint(unsigned char* yuv[]);
 
 	bool isExit = false;
 
@@ -47,6 +47,7 @@ private:
 	int width = 1920;
 	int height = 1080;
 
+	//YUV数据
 	unsigned char* datas[3] = { 0 };
 
 	int callUpdate = 0;
