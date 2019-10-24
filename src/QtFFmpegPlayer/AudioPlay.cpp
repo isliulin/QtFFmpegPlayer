@@ -11,7 +11,7 @@ AudioPlay::~AudioPlay()
 {
 }
 
-bool AudioPlay::Open()
+bool AudioPlay::Open(int sampleRate, int channels)
 {
 	QAudioFormat fmt;
 	fmt.setSampleRate(sampleRate);
@@ -32,6 +32,7 @@ bool AudioPlay::Open()
 	return true;
 }
 
+//关闭QAudioOutput和QIODevice
 void AudioPlay::Close()
 {
 	mutex.lock();
@@ -48,6 +49,7 @@ void AudioPlay::Close()
 	}
 }
 
+//返回音频缓冲区中可用的空闲空间(以字节为单位)。
 int AudioPlay::GetFree()
 {
 	QMutexLocker locker(&mutex);
@@ -55,8 +57,8 @@ int AudioPlay::GetFree()
 	int free = output->bytesFree();
 	return free;
 }
-
-bool AudioPlay::Write(char* data, int dataSize)
+//把数据写入音频缓冲区
+bool AudioPlay::Write(unsigned char* data, int dataSize)
 {
 	if (!data || data <= 0)return false;
 	QMutexLocker locker(&mutex);

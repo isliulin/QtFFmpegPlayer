@@ -9,6 +9,7 @@ if exist swresample-2.dll (del swresample-2.dll)
 if exist swscale-4.dll (del swscale-4.dll)
 ::删除platforms文件夹
 if exist platforms (rd/s/q platforms)
+if exist audio (rd/s/q audio)
 if exist Qt5Core.dll (del Qt5Core.dll)
 if exist Qt5Cored.dll (del Qt5Cored.dll)
 if exist Qt5Gui.dll (del Qt5Gui.dll)

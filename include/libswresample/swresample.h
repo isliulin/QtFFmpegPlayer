@@ -301,7 +301,7 @@ void swr_close(struct SwrContext *s);
  * @param in        input buffers, only the first one need to be set in case of packed audio
  * @param in_count  number of input samples available in one channel
  *
- * @return number of samples output per channel, negative value on error
+ * @return number of samples output per channel（返回每个通道输出的样本数量）, negative value on error
  */
 int swr_convert(struct SwrContext *s, uint8_t **out, int out_count,
                                 const uint8_t **in , int in_count);

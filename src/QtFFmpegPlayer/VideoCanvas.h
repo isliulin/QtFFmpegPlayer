@@ -5,6 +5,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 struct AVFrame;
+struct AVCodecParameters;
 class VideoCanvas : public QOpenGLWidget, protected QOpenGLFunctions
 {
 

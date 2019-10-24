@@ -4,6 +4,7 @@
 extern "C"
 {
 #include <libavutil/frame.h>
+#include <libavcodec/avcodec.h>
 }
 
 #define GET_STR(x) #x
@@ -49,11 +50,13 @@ VideoCanvas::VideoCanvas(QWidget* parent)
 
 VideoCanvas::~VideoCanvas(){}
 
+
 void VideoCanvas::Init(int width, int height)
 {
 	QMutexLocker locker(&mutex);
 	this->width = width;
 	this->height = height;
+
 	delete datas[0];
 	delete datas[1];
 	delete datas[2];

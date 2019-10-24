@@ -262,6 +262,7 @@ typedef struct AVFrame {
      */
 
     /**
+	 * 该帧的音频单个通道的样本
      * number of audio samples (per channel) described by this frame
      */
     int nb_samples;

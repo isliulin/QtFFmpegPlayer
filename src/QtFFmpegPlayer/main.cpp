@@ -8,6 +8,7 @@
 #include "VideoCanvas2.h"
 #include "Resample.h"
 #include "AudioPlay.h"
+#include "ProcessAudio.h"
 
 extern "C"
 {
@@ -28,6 +29,7 @@ public:
 	VideoCanvas* video;
 	Resample resample;
 	AudioPlay aplay;
+	ProcessAudio pa;
 	bool isExist = false;
 	bool Init(const char* path = NULL)
 	{
@@ -50,11 +52,18 @@ public:
 			return false;
 		}
 		
+
 		vdecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO));
 		adecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
-		video->Init(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->width, demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO)->height);
+		AVCodecParameters * vpara = demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO);
+		video->Init(vpara->width, vpara->height);
+		avcodec_parameters_free(&vpara);
 		resample.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
-		qDebug() << aplay.Open();
+		AVCodecParameters * apara = demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO);
+		qDebug() << "audio play open:" << aplay.Open(apara->sample_rate, apara->channels);
+		avcodec_parameters_free(&apara);
+
+		pa.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
 		return true;
 	}
 	~Test()
@@ -105,7 +114,7 @@ protected:
 					{
 						if (aplay.GetFree() >= len)
 						{
-							aplay.Write((char*)pcm, len);
+							aplay.Write(pcm, len);
 							break;
 						}
 						QThread::msleep(1);

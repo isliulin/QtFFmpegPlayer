@@ -16,6 +16,7 @@ Decode::~Decode()
 {
 }
 
+//无论打开与否都释放 AVCodecParameters
 bool Decode::Open(AVCodecParameters *para)
 {
 	if (!para) return false;
@@ -35,7 +36,7 @@ bool Decode::Open(AVCodecParameters *para)
 	avcodec_parameters_to_context(codec, para);
 	//释放参数
 	avcodec_parameters_free(&para);
-	//代开解码器
+	//打开解码器
 	codec->thread_count = CODEC_THREAD_COUNT;
 	int ret = avcodec_open2(codec, NULL, NULL);
 	if (ret != 0)

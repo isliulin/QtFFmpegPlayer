@@ -118,6 +118,8 @@ bool Demux::Seek(double pos)
 	return true;
 }
 
+//获取视频参数 返回的空间需要清理 avcodec_parameters_free
+//目前只支持AVMEDIA_TYPE_VIDEO和AVMEDIA_TYPE_AUDIO
 AVCodecParameters* Demux::GetMediaParameters(AVMediaType type)
 {
 	QMutexLocker locker(&mutex);

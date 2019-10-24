@@ -10,7 +10,7 @@ public:
 	Resample();
 	~Resample();
 
-	//输出参数和输入参数一致除了采样格式，输出为s16, 会释放para
+	//输出参数和输入参数一致除了采样格式，输出为s16, 无论打开与否会释放para
 	bool Open(AVCodecParameters *para);
 	
 	void Close();

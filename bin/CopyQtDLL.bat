@@ -16,6 +16,11 @@ if not exist Qt5Widgetsd.dll (copy %dllpath%\bin\Qt5Widgetsd.dll .\)
 
 ::创建目录
 if not exist platforms (mkdir platforms)
+if not exist platforms/qwindows.dll (copy %dllpath%\plugins\platforms\qwindows.dll .\platforms)
+if not exist platforms/qwindowsd.dll (copy %dllpath%\plugins\platforms\qwindowsd.dll .\platforms)
 
-if not exist Qt5Core.dll (copy %dllpath%\plugins\platforms\qwindows.dll .\platforms)
-if not exist Qt5Core.dll (copy %dllpath%\plugins\platforms\qwindowsd.dll .\platforms)
+if not exist audio (mkdir audio)
+if not exist audio/qtaudio_wasapi.dll (copy %dllpath%\plugins\audio\qtaudio_wasapi.dll .\audio)
+if not exist audio/qtaudio_wasapid.dll (copy %dllpath%\plugins\audio\qtaudio_wasapid.dll .\audio)
+if not exist audio/qtaudio_windows.dll (copy %dllpath%\plugins\audio\qtaudio_windows.dll .\audio)
+if not exist audio/qtaudio_windowsd.dll (copy %dllpath%\plugins\audio\qtaudio_windowsd.dll .\audio)

@@ -2,6 +2,7 @@
 #include <QMutex>
 class QAudioOutput;
 class QIODevice;
+class AVCodecParameters;
 class AudioPlay
 {
 public:
@@ -9,16 +10,20 @@ public:
 	~AudioPlay();
 
 public:
-	int sampleRate = 44100;
+	//int sampleRate = 44100;
 	int sampleSize = 16;
-	int channels = 2;
+	//int channels = 2;
 
-	bool Open();
+	bool Open(int sampleRate, int channels);
+
+	//关闭QAudioOutput和QIODevice
 	void Close();
 
+	//返回音频缓冲区中可用的空闲空间(以字节为单位)。
 	int GetFree();
 
-	bool Write(char* data, int dataSize);
+	//把数据写入音频缓冲区
+	bool Write(unsigned char* data, int dataSize);
 
 private:
 	QMutex mutex;

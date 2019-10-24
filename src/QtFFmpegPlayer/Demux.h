@@ -33,6 +33,7 @@ public:
 
 	//清空读取数据缓存
 	void Clear();
+	//清空数据并关闭解封装上下文
 	void Close();
 
 public:
