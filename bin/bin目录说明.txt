@@ -1,1 +1,7 @@
-��Ŀ¼ֻ����dll����
+﻿#文件说明
+#该程序使用的是FFMpeg 3.4.2
+Clear.bat			清理dll文件
+CopyQtDLL.bat		复制Qt的dll文件，要把dllpath设置为自己的QT路径
+GetFFmpegFromNet.bat	从网络上下载FFmpeg的dll，要把dllpath设置为自己的FFmpeg动态库路径
+GetFFmpegFromLocal.bat	从本地获取FFmpeg的dll，要把dllpath设置为自己的FFmpeg动态库路径
+GetFFmpegDLL.exe		下载文件小程序

@@ -118,6 +118,7 @@
     <ClCompile Include="Demux.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerUtility.cpp" />
+    <ClCompile Include="ProcessAudio.cpp" />
     <ClCompile Include="QtFFmpegPlayer.cpp" />
     <ClCompile Include="Resample.cpp" />
     <ClCompile Include="VideoCanvas.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Decode.h" />
     <ClInclude Include="Demux.h" />
     <ClInclude Include="PlayerUtility.h" />
+    <ClInclude Include="ProcessAudio.h" />
     <ClInclude Include="Resample.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="VideoCanvas2.h" />

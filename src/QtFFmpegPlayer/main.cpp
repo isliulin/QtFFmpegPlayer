@@ -32,7 +32,8 @@ public:
 	bool Init(const char* path = NULL)
 	{
 		qDebug() << avformat_configuration();
-		
+		//qDebug() <<  avformat_version(); //3756900
+		//qDebug() << avcodec_version(); //3763044
 		bool isOpenSuccess = false;
 		if (path) isOpenSuccess = demux.Open(path);
 		else

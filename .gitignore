@@ -2,9 +2,12 @@ src/QtFFmpegPlayer/.vs
 src/QtFFmpegPlayer/GeneratedFiles
 src/QtFFmpegPlayer/x64
 bin/QtFFmpegPlayer.exe
+*.a
+*.def
 *.ilk
 *.pdb
-bin/Qt5Core.dll
-bin/Qt5Gui.dll
-bin/Qt5Widgets.dll
-bin/Qt5OpenGL.dll
+bin/*.dll
+
+bin/ffplay.exe
+bin/ffmpeg.exe
+bin/ffprobe.exe
