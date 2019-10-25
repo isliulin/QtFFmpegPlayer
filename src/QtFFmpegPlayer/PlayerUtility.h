@@ -34,6 +34,7 @@ public:
 
 	//ȡֵ��ΧΪ[0, maxvalue]
 	int Random(int maxvalue);
+
 private:
 	PlayerUtility();
 };

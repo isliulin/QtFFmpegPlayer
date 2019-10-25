@@ -9,6 +9,7 @@
 #include "Resample.h"
 #include "AudioPlay.h"
 #include "ProcessAudio.h"
+#include "ProcessVideo.h"
 
 extern "C"
 {
@@ -24,24 +25,22 @@ class Test : public QThread
 
 public:
 	Demux demux;
-	Decode adecode;
-	Decode vdecode;
-	VideoCanvas* video;
-	Resample resample;
-	AudioPlay aplay;
+
 	ProcessAudio pa;
+	ProcessVideo pv;
 	bool isExist = false;
-	bool Init(const char* path = NULL)
+	bool Init(VideoCanvas * canvas, const char* path = NULL)
 	{
+		
 		qDebug() << avformat_configuration();
-		//qDebug() <<  avformat_version(); //3756900
-		//qDebug() << avcodec_version(); //3763044
+
 		bool isOpenSuccess = false;
 		if (path) isOpenSuccess = demux.Open(path);
 		else
 		{
 			isOpenSuccess = demux.Open("F:/HTTP/Faded.mp4");
 			isOpenSuccess = demux.Open("F:/硕鼠下载/Dragon PigCNBALLERCloud Wang.mp4");
+			isOpenSuccess = demux.Open("F:/Http/体面 于文文.mp4");
 			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/nfdw.mp4");
 			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/8K机房监控.mp4");
 		}
@@ -52,26 +51,16 @@ public:
 			return false;
 		}
 		
-
-		vdecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO));
-		adecode.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
-		AVCodecParameters * vpara = demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO);
-		video->Init(vpara->width, vpara->height);
-		avcodec_parameters_free(&vpara);
-		resample.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
-		AVCodecParameters * apara = demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO);
-		qDebug() << "audio play open:" << aplay.Open(apara->sample_rate, apara->channels);
-		avcodec_parameters_free(&apara);
-
-		pa.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO));
+		pv.SetCanvas(canvas);
+		if (!pv.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO))) return false;
+		pv.start();
+		if (!pa.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO))) return false;
+		pa.start();
 		return true;
 	}
 	~Test()
 	{
 		isExist = true;
-		video->isExit = true;
-		vdecode.Close();
-		adecode.Close();
 		demux.Close();
 		wait();
 	}
@@ -91,35 +80,13 @@ protected:
 			}
 			if (demux.IsVideo(pkt))
 			{
-				vdecode.Send(pkt);
-				for (;;)
-				{
-					AVFrame* frame = vdecode.Recv();
-					if (!frame) break;
-					//处理视频帧
-					video->Repaint(frame);
-					//av_frame_free(&frame);
-				}
+				pv.Push(pkt);
+				//av_packet_free(&pkt);
 			}
 			else
 			{
-				adecode.Send(pkt);
-				for (;;)
-				{
-					AVFrame* frame = adecode.Recv();
-					if (!frame) break;
-					//处理音频帧
-					int len = resample.AudioResample(frame, pcm);
-					while (len > 0)
-					{
-						if (aplay.GetFree() >= len)
-						{
-							aplay.Write(pcm, len);
-							break;
-						}
-						QThread::msleep(1);
-					}
-				}
+				pa.Push(pkt);
+				//av_packet_free(&pkt);
 			}
 		}
 	}
@@ -182,12 +149,12 @@ int main(int argc, char *argv[])
 	w.show();
 
 	Test test;
-	test.video = w.ui.video;
+
 	bool isOpenSuccess = false;
 	if (argc > 1)
-		isOpenSuccess = test.Init(argv[1]);
+		isOpenSuccess = test.Init(w.ui.video, argv[1]);
 	else
-		isOpenSuccess = test.Init();
+		isOpenSuccess = test.Init(w.ui.video);
 	if (isOpenSuccess)
 		test.start();
 

@@ -19,6 +19,7 @@ Decode::~Decode()
 //无论打开与否都释放 AVCodecParameters
 bool Decode::Open(AVCodecParameters *para)
 {
+	qDebug() << "add-:" << &para;
 	if (!para) return false;
 	Close();
 	//查找解码器

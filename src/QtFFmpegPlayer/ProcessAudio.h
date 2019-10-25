@@ -1,24 +1,27 @@
 #pragma once
-#include <QThread>
+#include "ProcessBase.h"
+#include <QMutex>
 class Decode;
 class Resample;
 class AudioPlay;
 struct AVCodecParameters;
-class ProcessAudio : public QThread
+struct AVPacket;
+class ProcessAudio : public ProcessBase
 {
 public:
 	ProcessAudio();
 	~ProcessAudio();
 
 	//无论打开与否都释放para
-	bool Open(AVCodecParameters* para);
+	virtual bool Open(AVCodecParameters* para);
 
 protected:
 	void run();
 
+
 private:
-	Decode* decode = NULL;
 	Resample* resample = NULL;
 	AudioPlay* aplay = NULL;
+
 };
 
