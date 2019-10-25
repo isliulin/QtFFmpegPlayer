@@ -97,8 +97,8 @@ AVPacket * Demux::Read()
 		return NULL;
 	}
 	//×ª»»ptsÎªºÁÃë
-	pkt->pts = pkt->pts * (PlayerUtility::Get()->r2d(afc->streams[videoStreamIndex]->time_base) * 1000);
-	pkt->dts = pkt->dts * (PlayerUtility::Get()->r2d(afc->streams[videoStreamIndex]->time_base) * 1000);
+	pkt->pts = pkt->pts * (PlayerUtility::Get()->r2d(afc->streams[pkt->stream_index]->time_base) * 1000);
+	pkt->dts = pkt->dts * (PlayerUtility::Get()->r2d(afc->streams[pkt->stream_index]->time_base) * 1000);
 	//qDebug() << "pts:" << pkt->pts;
 	return pkt;
 }

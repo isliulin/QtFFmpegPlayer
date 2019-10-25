@@ -39,10 +39,13 @@ public:
 		else
 		{
 			isOpenSuccess = demux.Open("F:/HTTP/Faded.mp4");
-			isOpenSuccess = demux.Open("F:/硕鼠下载/Dragon PigCNBALLERCloud Wang.mp4");
-			isOpenSuccess = demux.Open("F:/Http/体面 于文文.mp4");
+			//isOpenSuccess = demux.Open("F:/HTTP/4K.mp4");
+			//isOpenSuccess = demux.Open("F:/HTTP/sbz.mp4");
+			//isOpenSuccess = demux.Open("F:/硕鼠下载/Dragon PigCNBALLERCloud Wang.mp4");
+			//isOpenSuccess = demux.Open("F:/Http/体面 于文文.mp4");
 			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/nfdw.mp4");
 			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/8K机房监控.mp4");
+
 		}
 		//demux.Seek(0.5);
 		if (!isOpenSuccess)

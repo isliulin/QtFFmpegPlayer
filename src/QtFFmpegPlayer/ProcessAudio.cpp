@@ -47,6 +47,19 @@ bool ProcessAudio::Open(AVCodecParameters* para)
 
 }
 
+void ProcessAudio::Push(AVPacket* pkt)
+{
+	if (!pkt) return;
+	while (packets.size() > 100)
+	{
+		QThread::msleep(1);
+	}
+	QMutexLocker locker(&tmpMtx);
+	tmpPkts.push_back(pkt);
+	//qDebug() << "add packet to tmpPkts";
+
+}
+
 void ProcessAudio::run()
 {
 	unsigned char* pcm = new unsigned char[1024 * 1024 * 10];
@@ -74,12 +87,15 @@ void ProcessAudio::run()
 			QThread::msleep(1);
 			continue;
 		}
+		//qDebug() << "audio packets size:" << packets.size();
 		while (!isExist)
 		{
 			AVFrame* frame = decode->Recv();
 			if (!frame) break;
 			//处理音频帧 重采样
-
+			long long mpts = decode->pts - aplay->GetNoPlayMs();
+			PlayerUtility::Get()->audioPts = mpts;
+			//qDebug() << "audioPts:" << PlayerUtility::Get()->audioPts;
 			int len = resample->AudioResample(frame, pcm);
 			while (len > 0)
 			{

@@ -39,6 +39,19 @@ void ProcessVideo::SetCanvas(VideoCanvas* canvas)
 	this->canvas = canvas;
 }
 
+void ProcessVideo::Push(AVPacket* pkt)
+{
+	if (!pkt) return;
+	while (packets.size() > 100)
+	{
+		QThread::msleep(1);
+	}
+	QMutexLocker locker(&tmpMtx);
+	tmpPkts.push_back(pkt);
+	//qDebug() << "add packet to tmpPkts";
+
+}
+
 void ProcessVideo::run()
 {
 	while (!isExist)
@@ -66,11 +79,17 @@ void ProcessVideo::run()
 			QThread::msleep(1);
 			continue;
 		}
+		//qDebug() << "video packets size:" << packets.size();
 		while (!isExist)
 		{
 			AVFrame* frame = decode->Recv();
 			if (!frame) break;
-
+			//qDebug() << "audio pts:" << PlayerUtility::Get()->audioPts;
+			//qDebug() << "video pts:" << decode->pts;
+			while (decode->pts > PlayerUtility::Get()->audioPts)
+			{
+				QThread::msleep(1);
+			}
 			canvas->Repaint(frame);
 		}
 	}

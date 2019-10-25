@@ -40,6 +40,7 @@ const char* tString = GET_STR(
 		0, -0.39465, 2.03211,
 		1.13983, -0.58060, 0.0
 		)* yuv;
+		
 		gl_FragColor = vec4(rgb, 1.0);
 	}
 );
@@ -146,14 +147,13 @@ void VideoCanvas::Repaint(AVFrame *frame)
 	callUpdate++;
 	if (callUpdate % 100 == 0)
 	{
-		qDebug() << "callupdate:" << callUpdate << " update time:" << updateTime;
+		//qDebug() << "callupdate:" << callUpdate << " update time:" << updateTime;
 	}
 }
 //»æÖÆYUVÊý¾Ý
 void VideoCanvas::Repaint(unsigned char* yuv[])
 {
 	while (isRepainting) {
-		qDebug() << "draw yuv";
 		if (isExit) return;
 		QThread::msleep(1);
 	}
@@ -165,7 +165,7 @@ void VideoCanvas::Repaint(unsigned char* yuv[])
 	callUpdate++;
 	if (callUpdate % 100 == 0)
 	{
-		qDebug() << "callupdate:" << callUpdate << " update time:" << updateTime;
+		//qDebug() << "callupdate:" << callUpdate << " update time:" << updateTime;
 	}
 }
 

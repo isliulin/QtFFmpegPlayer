@@ -10,9 +10,9 @@ public:
 	~AudioPlay();
 
 public:
-	//int sampleRate = 44100;
+	int sampleRate = 44100;
 	int sampleSize = 16;
-	//int channels = 2;
+	int channels = 2;
 
 	bool Open(int sampleRate, int channels);
 
@@ -25,6 +25,8 @@ public:
 	//把数据写入音频缓冲区
 	bool Write(unsigned char* data, int dataSize);
 
+	//返回还未播放的时间ms
+	long long GetNoPlayMs();
 private:
 	QMutex mutex;
 	QAudioOutput *output = NULL;

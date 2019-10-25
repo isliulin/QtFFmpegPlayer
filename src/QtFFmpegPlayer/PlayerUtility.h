@@ -35,6 +35,7 @@ public:
 	//ȡֵ��ΧΪ[0, maxvalue]
 	int Random(int maxvalue);
 
+	long long audioPts;
 private:
 	PlayerUtility();
 };

@@ -24,6 +24,7 @@ public:
 	//清理解码器上下文，并关闭，指针置为NULL
 	void Close();
 	
+	long long pts = 0;
 private:
 
 	QMutex mutex;

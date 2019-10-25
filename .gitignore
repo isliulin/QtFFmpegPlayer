@@ -7,7 +7,8 @@ bin/QtFFmpegPlayer.exe
 *.ilk
 *.pdb
 bin/*.dll
-
+bin/audio
+bin/platforms
 bin/ffplay.exe
 bin/ffmpeg.exe
 bin/ffprobe.exe

@@ -13,7 +13,7 @@ public:
 	//无论打开与否都释放para
 	virtual bool Open(AVCodecParameters* para) = 0;
 
-	void Push(AVPacket* pkt);
+	virtual void Push(AVPacket* pkt);
 
 protected:
 	Decode* decode = NULL;
