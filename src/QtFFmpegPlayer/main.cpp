@@ -20,82 +20,6 @@ extern "C"
 #pragma  comment(lib, "avutil.lib")
 #pragma  comment(lib, "swresample.lib")
 
-class Test : public QThread
-{
-
-public:
-	Demux demux;
-
-	ProcessAudio pa;
-	ProcessVideo pv;
-	bool isExist = false;
-	bool Init(VideoCanvas * canvas, const char* path = NULL)
-	{
-		
-		qDebug() << avformat_configuration();
-
-		bool isOpenSuccess = false;
-		if (path) isOpenSuccess = demux.Open(path);
-		else
-		{
-			isOpenSuccess = demux.Open("F:/HTTP/Faded.mp4");
-			//isOpenSuccess = demux.Open("F:/HTTP/4K.mp4");
-			//isOpenSuccess = demux.Open("F:/HTTP/sbz.mp4");
-			//isOpenSuccess = demux.Open("F:/硕鼠下载/Dragon PigCNBALLERCloud Wang.mp4");
-			//isOpenSuccess = demux.Open("F:/Http/体面 于文文.mp4");
-			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/nfdw.mp4");
-			//isOpenSuccess = demux.Open("C:/Users/Administrator/Desktop/dl/8K机房监控.mp4");
-
-		}
-		//demux.Seek(0.5);
-		if (!isOpenSuccess)
-		{
-			qDebug() << "open failed!";
-			return false;
-		}
-		
-		pv.SetCanvas(canvas);
-		if (!pv.Open(demux.GetMediaParameters(AVMEDIA_TYPE_VIDEO))) return false;
-		pv.start();
-		if (!pa.Open(demux.GetMediaParameters(AVMEDIA_TYPE_AUDIO))) return false;
-		pa.start();
-		return true;
-	}
-	~Test()
-	{
-		isExist = true;
-		demux.Close();
-		wait();
-	}
-protected:
-	unsigned char* pcm = new unsigned char[1024 * 1024];
-	void run()
-	{
-		for (;;)
-		{
-			if(isExist) break;
-			AVPacket* pkt = demux.Read();
-
-			if (pkt == NULL) {
-				demux.Seek(0);
-				qDebug() << "decode ok";
-				//break;
-			}
-			if (demux.IsVideo(pkt))
-			{
-				pv.Push(pkt);
-				//av_packet_free(&pkt);
-			}
-			else
-			{
-				pa.Push(pkt);
-				//av_packet_free(&pkt);
-			}
-		}
-	}
-	
-};
-
 class DrawYUV : public QThread
 {
 
@@ -144,27 +68,47 @@ protected:
 		}
 	}
 };
+class PlayPCM
+{
+public:
+	
+	static void Play1(const char* url, int sampleRate, int channels)
+	{
+		AudioPlay ap;
+		ap.Open(sampleRate, channels);
+		int size = ap.GetPeriodSize();
+		unsigned char *buf = new unsigned char[size];           //创建缓冲区buf
+		FILE *fp = fopen(url, "rb"); //打开音频文件audio1.pcm获取文件指针fp。r是以只读方式打开资源,b是不转义数据,就是不认转义字符,告诉函数库打开的文件为二进制文件，而非纯文字文件。注意如果写成FILE *fp = fopen("audio1.pcm", "r")会播放不了音频文件
+		while (!feof(fp)) //测试文件指针是否到了文件结束的位置。也就是判断音频文件audio1.pcm是否读完了
+		{
+			if (ap.GetFree() < size)
+			{
+				QThread::msleep(1); //这里如果不加延时，运行代码时，CPU占用率会极大。如果延时时间太长，比如1000ms，播放时声音会一卡一卡，这里选择延时1ms。
+				continue;
+			}
+			int len = fread(buf, 1, size, fp); //将音频文件audio1.pcm的PCM数据读取到内存buf中
+
+			if (len <= 0)  //如果读取到文件末尾或者读取不成功则通过break函数跳出while循环
+			{
+				break;
+			}
+			ap.Write(buf, len);
+		}
+		fclose(fp);          //关闭文件描述符fp
+		ap.Close();
+	}
+
+
+};
 int main(int argc, char *argv[])
 {
-
+	if (argc > 1)
+	{
+		qputenv("VIDEO_PATH", QByteArray(argv[1]));
+	}
 	QApplication a(argc, argv);
 	QtFFmpegPlayer w;
 	w.show();
-
-	Test test;
-
-	bool isOpenSuccess = false;
-	if (argc > 1)
-		isOpenSuccess = test.Init(w.ui.video, argv[1]);
-	else
-		isOpenSuccess = test.Init(w.ui.video);
-	if (isOpenSuccess)
-		test.start();
-
-	/*DrawYUV draw;
-	draw.video = w.ui.video;
-	draw.Init();
-	draw.start();*/
 	
 	return a.exec();
 }

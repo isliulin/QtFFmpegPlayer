@@ -101,7 +101,6 @@ void VideoCanvas::Init(int width, int height)
 
 void VideoCanvas::Repaint(AVFrame *frame)
 {
-	
 	while (isRepainting) {
 		if (isExit) return;
 		QThread::msleep(1);
@@ -217,15 +216,15 @@ void VideoCanvas::initializeGL()
 	initializeOpenGLFunctions();
 
 	//加载shader脚本
-	qDebug() << program.addShaderFromSourceCode(QGLShader::Vertex, vString);
-	qDebug() << program.addShaderFromSourceCode(QGLShader::Fragment, tString);
+	program.addShaderFromSourceCode(QGLShader::Vertex, vString);
+	program.addShaderFromSourceCode(QGLShader::Fragment, tString);
 	//设置定点坐标的变量
 	program.bindAttributeLocation("vertexIn", A_VER);
 	//设置材质坐标
 	program.bindAttributeLocation("textureIn", T_VER);
 
-	qDebug() << program.link();
-	qDebug() << program.bind();
+	program.link();
+	program.bind();
 
 	//传递定点和材质坐标
 	//顶点

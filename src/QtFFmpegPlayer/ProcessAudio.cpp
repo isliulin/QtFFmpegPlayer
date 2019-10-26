@@ -4,12 +4,28 @@
 #include "AudioPlay.h"
 #include <QDebug>
 #include <QMutexLocker>
+#include <QtConcurrent/QtConcurrent>
 #include "PlayerUtility.h"
 extern"C"
 {
 #include <libavcodec/avcodec.h>
 }
 
+struct AudioData
+{
+	unsigned char* data;
+	int length;
+	AudioData(int len)
+	{
+		data = new unsigned char[len];
+		length = len;
+	}
+	void Drop()
+	{
+		delete data;
+		data = NULL;
+	}
+};
 
 ProcessAudio::ProcessAudio()
 {
@@ -43,6 +59,7 @@ bool ProcessAudio::Open(AVCodecParameters* para)
 	isSuccess = decode->Open(para);
 	isSuccess = resample->Open(para2);
 
+	//QtConcurrent::run(this, &ProcessAudio::PlayAudioThread);
 	return isSuccess;
 
 }
@@ -50,18 +67,31 @@ bool ProcessAudio::Open(AVCodecParameters* para)
 void ProcessAudio::Push(AVPacket* pkt)
 {
 	if (!pkt) return;
-	while (packets.size() > 100)
+	while (!isExist && packets.size() > 100)
 	{
 		QThread::msleep(1);
 	}
 	QMutexLocker locker(&tmpMtx);
 	tmpPkts.push_back(pkt);
-	//qDebug() << "add packet to tmpPkts";
+	//qDebug() << "add packet to tmpPkts:" << packets.size();
 
 }
 
 void ProcessAudio::run()
 {
+	bool isWritePCM2file = false;
+	FILE* fp = NULL;
+	if (isWritePCM2file)
+	{
+		
+		fp = fopen("C:/Users/Administrator/Desktop/tmp/4k.pcm", "wb");
+		if (!fp)
+		{
+			qDebug() << "file open failed";
+			return;
+		}
+	}
+	
 	unsigned char* pcm = new unsigned char[1024 * 1024 * 10];
 	while (!isExist)
 	{
@@ -93,15 +123,33 @@ void ProcessAudio::run()
 			AVFrame* frame = decode->Recv();
 			if (!frame) break;
 			//处理音频帧 重采样
-			long long mpts = decode->pts - aplay->GetNoPlayMs();
-			PlayerUtility::Get()->audioPts = mpts;
-			//qDebug() << "audioPts:" << PlayerUtility::Get()->audioPts;
+
+			PlayerUtility::Get()->audioPts = decode->pts - aplay->GetNoPlayMs();
+
 			int len = resample->AudioResample(frame, pcm);
+
+			/*while (adlist.size() > 1000)
+			{
+				QThread::msleep(1);
+			}
+			if (len > 0)
+			{
+				AudioData* ad = new AudioData(len);
+				memcpy(ad->data, pcm, len);
+				adlist.push_back(ad);
+			}
+			qDebug() << "add datapacket";*/
+
 			while (len > 0)
 			{
 				if (aplay->GetFree() >= len)
 				{
 					aplay->Write(pcm, len);
+					if (isWritePCM2file)
+					{
+						fwrite(pcm, len, 1, fp);
+					}
+					
 					break;
 				}
 				QThread::msleep(1);
@@ -109,7 +157,39 @@ void ProcessAudio::run()
 		}
 
 	}
+	if (isWritePCM2file)
+	{
+		fclose(fp);
+	}
 	delete pcm;
 	pcm = NULL;
+	qDebug() << QThread::currentThreadId() << "Process Audio Thread Quit";
+}
+
+void ProcessAudio::PlayAudioThread()
+{
+	while (true)
+	{
+		if (adlist.size() == 0)
+		{
+			QThread::msleep(1);
+			continue;
+		}
+		AudioData* ad = adlist.front();
+		adlist.pop_front();
+		while (true)
+		{
+			if (aplay->GetFree() >= ad->length)
+			{
+				aplay->Write(ad->data, ad->length);
+				//fwrite(pcm, len, 1, fp);
+				ad->Drop();
+				break;
+			}
+			QThread::msleep(1);
+		}
+		QThread::msleep(1);
+		qDebug() << adlist.size();
+	}
 }
 

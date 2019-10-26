@@ -29,9 +29,9 @@ bool AudioPlay::Open(int sampleRate, int channels)
 	qreal volume = 0.9;
 	output->setVolume(volume);*/
 	io = output->start();
-	qDebug() << "buffsize:" << output->bufferSize(); //19200
-	qDebug() << "periodsize:" << output->periodSize();//3840
-	qDebug() << "byteFree:" << output->bytesFree();
+	//qDebug() << "buffsize:" << output->bufferSize(); //19200
+	//qDebug() << "periodsize:" << output->periodSize();//3840
+	//qDebug() << "byteFree:" << output->bytesFree();
 	mutex.unlock();
 	if (!io) return false;
 	return true;
@@ -62,6 +62,15 @@ int AudioPlay::GetFree()
 	int free = output->bytesFree();
 	return free;
 }
+
+int AudioPlay::GetPeriodSize()
+{
+	QMutexLocker locker(&mutex);
+	if (!output) return 0;
+	int size = output->periodSize();
+	return size;
+}
+
 //把数据写入音频缓冲区
 bool AudioPlay::Write(unsigned char* data, int dataSize)
 {

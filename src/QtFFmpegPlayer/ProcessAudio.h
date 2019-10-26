@@ -25,5 +25,8 @@ private:
 	Resample* resample = NULL;
 	AudioPlay* aplay = NULL;
 
+	std::list<struct AudioData*> adlist;
+
+	void PlayAudioThread();
 };
 

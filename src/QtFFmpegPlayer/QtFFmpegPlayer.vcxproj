@@ -118,6 +118,7 @@
     <ClCompile Include="Demux.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerUtility.cpp" />
+    <ClCompile Include="Player_1_0.cpp" />
     <ClCompile Include="ProcessAudio.cpp" />
     <ClCompile Include="ProcessBase.cpp" />
     <ClCompile Include="ProcessVideo.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="Decode.h" />
     <ClInclude Include="Demux.h" />
     <ClInclude Include="PlayerUtility.h" />
+    <ClInclude Include="Player_1_0.h" />
     <ClInclude Include="ProcessAudio.h" />
     <ClInclude Include="ProcessBase.h" />
     <ClInclude Include="ProcessVideo.h" />

@@ -17,6 +17,7 @@ ProcessVideo::ProcessVideo()
 ProcessVideo::~ProcessVideo()
 {
 	isExist = true;
+	this->canvas->isExit = true;
 	decode->Close();
 	wait();
 }
@@ -42,13 +43,12 @@ void ProcessVideo::SetCanvas(VideoCanvas* canvas)
 void ProcessVideo::Push(AVPacket* pkt)
 {
 	if (!pkt) return;
-	while (packets.size() > 100)
+	while (!isExist && packets.size() > 100)
 	{
 		QThread::msleep(1);
 	}
 	QMutexLocker locker(&tmpMtx);
 	tmpPkts.push_back(pkt);
-	//qDebug() << "add packet to tmpPkts";
 
 }
 
@@ -64,33 +64,36 @@ void ProcessVideo::run()
 			tmpPkts.pop_front();
 		}
 		tmpMtx.unlock();
+
 		QMutexLocker locker(&mutex);
 		if (packets.empty() || !decode || !canvas)
 		{
 			QThread::msleep(1);
 			continue;
 		}
+	
 		AVPacket *pkt = packets.front();
 		packets.pop_front();
 		bool ret = decode->Send(pkt);
-
+	
 		if (!ret)
 		{
 			QThread::msleep(1);
 			continue;
 		}
-		//qDebug() << "video packets size:" << packets.size();
+
 		while (!isExist)
 		{
+
 			AVFrame* frame = decode->Recv();
 			if (!frame) break;
-			//qDebug() << "audio pts:" << PlayerUtility::Get()->audioPts;
-			//qDebug() << "video pts:" << decode->pts;
-			while (decode->pts > PlayerUtility::Get()->audioPts)
+
+			while (!isExist && decode->pts > PlayerUtility::Get()->audioPts)
 			{
 				QThread::msleep(1);
 			}
 			canvas->Repaint(frame);
 		}
 	}
+	qDebug() << QThread::currentThreadId() << "Process Video Thread Quit";
 }

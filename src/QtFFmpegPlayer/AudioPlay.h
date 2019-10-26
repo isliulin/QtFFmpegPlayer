@@ -22,6 +22,8 @@ public:
 	//返回音频缓冲区中可用的空闲空间(以字节为单位)。
 	int GetFree();
 
+	int GetPeriodSize();
+
 	//把数据写入音频缓冲区
 	bool Write(unsigned char* data, int dataSize);
 
