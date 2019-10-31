@@ -32,7 +32,7 @@ void QtFFmpegPlayer::showEvent(QShowEvent *event)
 	QByteArray ba = qgetenv("VIDEO_PATH");
 	if (ba.isEmpty())
 	{
-		isOpenSuccess = player->Open(ui.video, "F:/HTTP/Faded.mp4");
+		isOpenSuccess = player->Open(ui.video, "D:/HTTPServer/Faded.mp4");
 		//isOpenSuccess = player->Open(ui.video, "C:/Users/Administrator/Desktop/dl/nfdw.mp4");
 		//isOpenSuccess = player->Open(ui.video, "https://www.sttplay.com/assets/Faded.mp4");
 	}
@@ -83,7 +83,7 @@ void QtFFmpegPlayer::keyPressEvent(QKeyEvent *ev)
 {
 	if (ev->key() == Qt::Key_Space)
 	{
-		//PlayerUtility::Get()->isPause = !PlayerUtility::Get()->isPause;
+		PlayerUtility::Get()->isPause = !PlayerUtility::Get()->isPause;
 	}
 	QWidget::keyPressEvent(ev);
 }

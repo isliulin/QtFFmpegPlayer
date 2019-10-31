@@ -94,8 +94,8 @@ void ProcessVideo::run()
 			AVFrame* frame = decode->Recv();
 			if (!frame) break;
 
-			//while (!isExist && decode->pts > PlayerUtility::Get()->GetCurrentAudioPTS())
-			while (!isExist && decode->pts > PlayerUtility::Get()->audioPts)
+			while (!isExist && decode->pts > PlayerUtility::Get()->GetCurrentAudioPTS())
+			//while (!isExist && decode->pts > PlayerUtility::Get()->audioPts)
 			{
 				QThread::msleep(1);
 			}

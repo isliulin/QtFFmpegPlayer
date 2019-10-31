@@ -4,7 +4,7 @@ UDPReceiver::UDPReceiver(QObject *parent)
 	: QObject(parent)
 {
 	uSocket = new QUdpSocket;
-	int port = 7000;
+	int port = 5555;
 	while (!uSocket->bind(QHostAddress("127.0.0.1"), port))
 	{
 		port++;
