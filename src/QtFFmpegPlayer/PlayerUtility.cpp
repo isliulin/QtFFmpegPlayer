@@ -1,10 +1,17 @@
 #include "PlayerUtility.h"
 #include <QDebug>
 #include <QTime>
+#include "AudioPlay.h"
 
 extern "C"
 {
 #include <libavutil/error.h>
+}
+
+int PlayerUtility::GetCurrentAudioPTS()
+{
+	
+	return justWritePts - ap->GetNoPlayMs();
 }
 
 PlayerUtility::PlayerUtility()

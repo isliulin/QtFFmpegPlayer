@@ -3,6 +3,7 @@
 #include "VideoCanvas.h"
 #include "Decode.h"
 #include "PlayerUtility.h"
+
 extern"C"
 {
 #include <libavcodec/avcodec.h>
@@ -56,6 +57,11 @@ void ProcessVideo::run()
 {
 	while (!isExist)
 	{
+		if (PlayerUtility::Get()->isPause)
+		{
+			QThread::msleep(1);
+			continue;
+		}
 		tmpMtx.lock();
 		int size = tmpPkts.size();
 		for (int i = 0; i < size; i++)
@@ -88,9 +94,16 @@ void ProcessVideo::run()
 			AVFrame* frame = decode->Recv();
 			if (!frame) break;
 
+			//while (!isExist && decode->pts > PlayerUtility::Get()->GetCurrentAudioPTS())
 			while (!isExist && decode->pts > PlayerUtility::Get()->audioPts)
 			{
 				QThread::msleep(1);
+			}
+			static bool isPaused = false;
+			if (!isPaused)
+			{
+				isPaused = true;
+				PlayerUtility::Get()->isPause = true;
 			}
 			canvas->Repaint(frame);
 		}

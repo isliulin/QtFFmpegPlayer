@@ -2,8 +2,10 @@
 #include <QAudioFormat>
 #include <QAudioOutput>
 #include <QDebug>
+#include "PlayerUtility.h"
 AudioPlay::AudioPlay()
 {
+	PlayerUtility::Get()->ap = this;
 }
 
 
@@ -83,6 +85,7 @@ bool AudioPlay::Write(unsigned char* data, int dataSize)
 	if (dataSize != size) return false;
 	return true;
 }
+
 
 //返回还未播放的时间ms
 long long AudioPlay::GetNoPlayMs()

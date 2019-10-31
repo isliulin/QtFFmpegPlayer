@@ -78,6 +78,9 @@
     <ClCompile Include="Player_1_0.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UDPReceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="QtFFmpegPlayer.h">
@@ -85,6 +88,9 @@
     </QtMoc>
     <QtMoc Include="VideoCanvas.h">
       <Filter>Header Files\OpenGL</Filter>
+    </QtMoc>
+    <QtMoc Include="UDPReceiver.h">
+      <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>

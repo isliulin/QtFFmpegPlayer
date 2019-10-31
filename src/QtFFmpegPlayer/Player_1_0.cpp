@@ -4,7 +4,7 @@
 #include "ProcessAudio.h"
 #include "ProcessVideo.h"
 #include <QDebug>
-
+#include "PlayerUtility.h"
 extern "C"
 {
 #include <libavformat/avformat.h>
@@ -56,6 +56,12 @@ void Player_1_0::run()
 {
 	while (!isExit)
 	{
+
+		if (PlayerUtility::Get()->isPause)
+		{
+			QThread::msleep(1);
+			continue;
+		}
 		AVPacket *pkt = demux->Read();
 		if (pkt == NULL)
 		{

@@ -4,7 +4,7 @@ extern "C"
 {
 #include <libavutil/rational.h>
 }
-
+class AudioPlay;
 class PlayerUtility
 {
 public:
@@ -36,6 +36,13 @@ public:
 	int Random(int maxvalue);
 
 	long long audioPts;
+
+	long long justWritePts;
+	AudioPlay* ap;
+
+	int GetCurrentAudioPTS();
+
+	bool isPause = false;
 private:
 	PlayerUtility();
 };

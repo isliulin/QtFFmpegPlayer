@@ -23,6 +23,8 @@ protected:
 
 	void mouseDoubleClickEvent(QMouseEvent *event);
 
+	void keyPressEvent(QKeyEvent *ev);
+
 private:
 	Player_1_0 *player = NULL;
 

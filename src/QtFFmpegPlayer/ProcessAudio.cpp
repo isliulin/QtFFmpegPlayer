@@ -95,6 +95,12 @@ void ProcessAudio::run()
 	unsigned char* pcm = new unsigned char[1024 * 1024 * 10];
 	while (!isExist)
 	{
+		if (PlayerUtility::Get()->isPause)
+		{
+			QThread::msleep(1);
+			continue;
+		}
+
 		tmpMtx.lock();
 		int size = tmpPkts.size();
 		for (int i = 0; i < size; i++)
@@ -124,32 +130,22 @@ void ProcessAudio::run()
 			if (!frame) break;
 			//处理音频帧 重采样
 
+			long long recordTime = PlayerUtility::Get()->GetNowMs();
 			PlayerUtility::Get()->audioPts = decode->pts - aplay->GetNoPlayMs();
-
+			
 			int len = resample->AudioResample(frame, pcm);
-
-			/*while (adlist.size() > 1000)
-			{
-				QThread::msleep(1);
-			}
-			if (len > 0)
-			{
-				AudioData* ad = new AudioData(len);
-				memcpy(ad->data, pcm, len);
-				adlist.push_back(ad);
-			}
-			qDebug() << "add datapacket";*/
 
 			while (len > 0)
 			{
 				if (aplay->GetFree() >= len)
 				{
+					PlayerUtility::Get()->justWritePts = decode->pts + (PlayerUtility::Get()->GetNowMs() - recordTime);
 					aplay->Write(pcm, len);
 					if (isWritePCM2file)
 					{
 						fwrite(pcm, len, 1, fp);
 					}
-					
+
 					break;
 				}
 				QThread::msleep(1);
