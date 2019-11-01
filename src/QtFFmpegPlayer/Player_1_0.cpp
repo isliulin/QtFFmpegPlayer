@@ -52,6 +52,7 @@ void Player_1_0::GetVideoSize(int *width, int *height)
 	avcodec_parameters_free(&pa);
 }
 
+
 void Player_1_0::run()
 {
 	while (!isExit)
@@ -71,8 +72,9 @@ void Player_1_0::run()
 		}
 		if (demux->IsVideo(pkt))
 		{
-			if(video)
-				video->Push(pkt);
+			/*if(video)
+				video->Push(pkt);*/
+			av_packet_free(&pkt);
 		}
 		else
 		{

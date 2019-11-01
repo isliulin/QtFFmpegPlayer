@@ -16,6 +16,12 @@ UDPReceiver::UDPReceiver(QObject *parent)
 
 UDPReceiver::~UDPReceiver()
 {
+	qDebug() << "close udp !!";
+}
+
+void UDPReceiver::SendTo(QByteArray msg, QString host, int port)
+{
+	uSocket->writeDatagram(msg, QHostAddress(host), port);
 }
 
 void UDPReceiver::OnReceive()

@@ -32,6 +32,7 @@ bool Decode::Open(AVCodecParameters *para)
 	QMutexLocker locker(&mutex);
 	//创建解码器上下文
 	codec = avcodec_alloc_context3(avcodec);
+	
 	//复制解码器上下文参数
 	avcodec_parameters_to_context(codec, para);
 	//释放参数

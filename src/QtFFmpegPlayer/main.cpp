@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
 	{
 		qputenv("VIDEO_PATH", QByteArray(argv[1]));
 	}
+
 	QApplication a(argc, argv);
 	QtFFmpegPlayer w;
 	w.show();

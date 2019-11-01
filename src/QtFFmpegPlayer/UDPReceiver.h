@@ -8,8 +8,10 @@ class UDPReceiver : public QObject
 	Q_OBJECT
 
 public:
-	UDPReceiver(QObject *parent);
+	UDPReceiver(QObject *parent = Q_NULLPTR);
 	~UDPReceiver();
+
+	void SendTo(QByteArray msg, QString host, int port);
 
 public slots:
 

@@ -43,7 +43,14 @@ public:
 	int GetCurrentAudioPTS();
 
 	bool isPause = false;
+
+	bool isRunAudioTestThread = false;
+
+	class UDPReceiver* udp = NULL;
+
 private:
 	PlayerUtility();
+
+	
 };
 

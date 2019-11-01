@@ -14,6 +14,7 @@ public:
 	bool Open(VideoCanvas * canvas, const char* path);
 
 	void GetVideoSize(int *width, int *height);
+
 protected:
 	void run();
 

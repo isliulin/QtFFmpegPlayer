@@ -6,6 +6,7 @@
 #include <QMutexLocker>
 #include <QtConcurrent/QtConcurrent>
 #include "PlayerUtility.h"
+#include "UDPReceiver.h"
 extern"C"
 {
 #include <libavcodec/avcodec.h>
@@ -15,10 +16,11 @@ struct AudioData
 {
 	unsigned char* data;
 	int length;
-	AudioData(int len)
+	AudioData(unsigned char* pcm, int len)
 	{
-		data = new unsigned char[len];
+		data = new unsigned char[len]{0};
 		length = len;
+		memcpy(data, pcm, length);
 	}
 	void Drop()
 	{
@@ -59,7 +61,7 @@ bool ProcessAudio::Open(AVCodecParameters* para)
 	isSuccess = decode->Open(para);
 	isSuccess = resample->Open(para2);
 
-	//QtConcurrent::run(this, &ProcessAudio::PlayAudioThread);
+	QtConcurrent::run(this, &ProcessAudio::PlayAudioThread);
 	return isSuccess;
 
 }
@@ -73,12 +75,12 @@ void ProcessAudio::Push(AVPacket* pkt)
 	}
 	QMutexLocker locker(&tmpMtx);
 	tmpPkts.push_back(pkt);
-	//qDebug() << "add packet to tmpPkts:" << packets.size();
 
 }
 
 void ProcessAudio::run()
 {
+	
 	bool isWritePCM2file = false;
 	FILE* fp = NULL;
 	if (isWritePCM2file)
@@ -135,11 +137,14 @@ void ProcessAudio::run()
 			
 			int len = resample->AudioResample(frame, pcm);
 
-			while (len > 0)
+			adlist.push_back(new AudioData(pcm, len));
+	
+			/*while (len > 0)
 			{
 				if (aplay->GetFree() >= len)
 				{
 					PlayerUtility::Get()->justWritePts = decode->pts + (PlayerUtility::Get()->GetNowMs() - recordTime);
+
 					aplay->Write(pcm, len);
 					if (isWritePCM2file)
 					{
@@ -149,7 +154,7 @@ void ProcessAudio::run()
 					break;
 				}
 				QThread::msleep(1);
-			}
+			}*/
 		}
 
 	}
@@ -164,8 +169,13 @@ void ProcessAudio::run()
 
 void ProcessAudio::PlayAudioThread()
 {
-	while (true)
+	while (!isExist)
 	{
+		if (!PlayerUtility::Get()->isRunAudioTestThread)
+		{
+			QThread::msleep(1);
+			continue;
+		}
 		if (adlist.size() == 0)
 		{
 			QThread::msleep(1);
@@ -178,6 +188,7 @@ void ProcessAudio::PlayAudioThread()
 			if (aplay->GetFree() >= ad->length)
 			{
 				aplay->Write(ad->data, ad->length);
+				PlayerUtility::Get()->udp->SendTo((char*)ad->data, "127.0.0.1", 6001);
 				//fwrite(pcm, len, 1, fp);
 				ad->Drop();
 				break;

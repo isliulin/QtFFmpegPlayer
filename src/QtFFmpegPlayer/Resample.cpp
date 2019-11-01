@@ -23,10 +23,16 @@ bool Resample::Open(AVCodecParameters *para)
 	QMutexLocker locker(&mutex);
 	//返回给定数量通道的默认通道布局。
 	//int x = av_get_default_channel_layout(2);
+	int channels = para->channels;
+	if (channels >= 2)
+	{
+		channels = 2;
+	}
+	actx = swr_alloc();
 	actx = swr_alloc_set_opts(
 		actx,
-		av_get_default_channel_layout(para->channels),					//输出格式
-		(AVSampleFormat)outFormat,							//输出样本格式
+		av_get_default_channel_layout(channels),			//输出格式
+		(AVSampleFormat)outFormat,							//输出样本格式  AV_SAMPLE_FMT_S16
 		para->sample_rate,									//输出采样率
 		av_get_default_channel_layout(para->channels),		//输入格式
 		(AVSampleFormat)para->format,						//输入样本格式
@@ -61,13 +67,13 @@ int Resample::AudioResample(AVFrame* indata, unsigned char *outdata)
 		av_frame_free(&indata);
 		return 0;
 	}
-	/*uint8_t *data = { 0 };
-	data = outdata;*/
-	int ret = swr_convert(actx, &outdata, indata->nb_samples,				//输出
+	uint8_t *data[2] = { 0 };
+	data[0] = outdata;
+	int ret = swr_convert(actx, data, indata->nb_samples,				//输出
 							(const uint8_t**)indata->data, indata->nb_samples	//输入
 	);
 	
-	if (ret <= 0) return ret;
+	if (ret < 0) return ret;
 	int size = ret * indata->channels * av_get_bytes_per_sample((AVSampleFormat)outFormat);
 	av_frame_free(&indata);
 	return size;

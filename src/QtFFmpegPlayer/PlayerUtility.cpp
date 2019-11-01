@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <QTime>
 #include "AudioPlay.h"
-
+#include "UDPReceiver.h"
 extern "C"
 {
 #include <libavutil/error.h>
@@ -16,11 +16,13 @@ int PlayerUtility::GetCurrentAudioPTS()
 
 PlayerUtility::PlayerUtility()
 {
+	udp = new UDPReceiver();
 }
 
 
 PlayerUtility::~PlayerUtility()
 {
+	delete udp;
 }
 
 void PlayerUtility::av_strerror2(int errnum, const char* log)

@@ -99,13 +99,16 @@ void ProcessVideo::run()
 			{
 				QThread::msleep(1);
 			}
-			static bool isPaused = false;
+			//第一帧停下来
+			/*static bool isPaused = false;
 			if (!isPaused)
 			{
 				isPaused = true;
 				PlayerUtility::Get()->isPause = true;
-			}
+			}*/
+
 			canvas->Repaint(frame);
+
 		}
 	}
 	qDebug() << QThread::currentThreadId() << "Process Video Thread Quit";

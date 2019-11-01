@@ -83,6 +83,7 @@ bool AudioPlay::Write(unsigned char* data, int dataSize)
 	locker.unlock();
 
 	if (dataSize != size) return false;
+
 	return true;
 }
 

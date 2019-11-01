@@ -45,6 +45,43 @@ const char* tString = GET_STR(
 	}
 );
 
+static const char *fragNV12 = GET_STR(
+
+	varying vec2 textureOut;
+	uniform sampler2D yTexture;
+	uniform sampler2D uvTexture;
+	void main() {
+		vec3 yuv;
+		vec3 rgb;
+		yuv.r = texture2D(yTexture, vTexCoord).r;
+		yuv.g = texture2D(uvTexture, vTexCoord).r - 0.5;
+		yuv.b = texture2D(uvTexture, vTexCoord).a - 0.5;
+		rgb = mat3(1.0, 1.0, 1.0,
+			0.0, -0.39465, 2.03211,
+			1.13983, -0.58060, 0.0)*yuv;
+	//输出像素颜色
+		gl_FragColor = vec4(rgb, 1.0);
+	}
+);
+
+static const char *fragNV21 = GET_STR(
+	varying vec2 vTexCoord;     //顶点着色器传递的坐标
+	uniform sampler2D yTexture; //输入的材质（不透明灰度，单像素）
+	uniform sampler2D uvTexture;
+	void main() {
+		vec3 yuv;
+		vec3 rgb;
+		yuv.r = texture2D(yTexture, vTexCoord).r;
+		yuv.g = texture2D(uvTexture, vTexCoord).a - 0.5;
+		yuv.b = texture2D(uvTexture, vTexCoord).r - 0.5;
+		rgb = mat3(1.0, 1.0, 1.0,
+			0.0, -0.39465, 2.03211,
+			1.13983, -0.58060, 0.0)*yuv;
+		//输出像素颜色
+		gl_FragColor = vec4(rgb, 1.0);
+	}
+);
+
 VideoCanvas::VideoCanvas(QWidget* parent)
 	:QOpenGLWidget(parent){}
 
