@@ -18,7 +18,7 @@ struct AudioData
 	int length;
 	AudioData(unsigned char* pcm, int len)
 	{
-		data = new unsigned char[len]{0};
+		data = new unsigned char[len] {0};
 		length = len;
 		memcpy(data, pcm, length);
 	}
@@ -61,7 +61,7 @@ bool ProcessAudio::Open(AVCodecParameters* para)
 	isSuccess = decode->Open(para);
 	isSuccess = resample->Open(para2);
 
-	QtConcurrent::run(this, &ProcessAudio::PlayAudioThread);
+	//QtConcurrent::run(this, &ProcessAudio::PlayAudioThread);
 	return isSuccess;
 
 }
@@ -80,20 +80,20 @@ void ProcessAudio::Push(AVPacket* pkt)
 
 void ProcessAudio::run()
 {
-	
-	bool isWritePCM2file = false;
+
+	bool isWritePCM2file = true;
 	FILE* fp = NULL;
 	if (isWritePCM2file)
 	{
-		
-		fp = fopen("C:/Users/Administrator/Desktop/tmp/4k.pcm", "wb");
+
+		fp = fopen("D:/Test/faded_yuan2.pcm", "wb");
 		if (!fp)
 		{
 			qDebug() << "file open failed";
 			return;
 		}
 	}
-	
+
 	unsigned char* pcm = new unsigned char[1024 * 1024 * 10];
 	while (!isExist)
 	{
@@ -132,35 +132,37 @@ void ProcessAudio::run()
 			if (!frame) break;
 			//处理音频帧 重采样
 
-			long long recordTime = PlayerUtility::Get()->GetNowMs();
-			PlayerUtility::Get()->audioPts = decode->pts - aplay->GetNoPlayMs();
-			
+			/*long long recordTime = PlayerUtility::Get()->GetNowMs();
+			PlayerUtility::Get()->audioPts = decode->pts - aplay->GetNoPlayMs();*/
+
 			int len = resample->AudioResample(frame, pcm);
 
-			adlist.push_back(new AudioData(pcm, len));
-	
-			/*while (len > 0)
+			pcmBA.append((char*)pcm, len);
+
+			int offsetTime = 0;
+			int periodSize = aplay->GetPeriodSize();
+			while (pcmBA.size() >= periodSize)
 			{
-				if (aplay->GetFree() >= len)
+				if (aplay->GetFree() < periodSize)
 				{
-					PlayerUtility::Get()->justWritePts = decode->pts + (PlayerUtility::Get()->GetNowMs() - recordTime);
-
-					aplay->Write(pcm, len);
-					if (isWritePCM2file)
-					{
-						fwrite(pcm, len, 1, fp);
-					}
-
-					break;
+					QThread::msleep(1);
+					continue;
 				}
-				QThread::msleep(1);
-			}*/
+				QByteArray data = pcmBA.left(periodSize);
+				pcmBA = pcmBA.remove(0, periodSize);
+				aplay->Write(data.data(), periodSize);
+				PlayerUtility::Get()->justWritePts = decode->pts + offsetTime;
+				offsetTime += aplay->GetPeriodMs();
+
+			}
+		
 		}
 
 	}
 	if (isWritePCM2file)
 	{
 		fclose(fp);
+		qDebug() << "write pcm file ok";
 	}
 	delete pcm;
 	pcm = NULL;
@@ -171,32 +173,24 @@ void ProcessAudio::PlayAudioThread()
 {
 	while (!isExist)
 	{
-		if (!PlayerUtility::Get()->isRunAudioTestThread)
+		QMutexLocker locker(&mutex);
+		
+		static long long recordTime = PlayerUtility::Get()->GetNowMs();
+
+		int periodSize = aplay->GetPeriodSize();
+		if (aplay->GetFree() > periodSize)
 		{
-			QThread::msleep(1);
-			continue;
-		}
-		if (adlist.size() == 0)
-		{
-			QThread::msleep(1);
-			continue;
-		}
-		AudioData* ad = adlist.front();
-		adlist.pop_front();
-		while (true)
-		{
-			if (aplay->GetFree() >= ad->length)
+			if (pcmBA.size() <= periodSize)
 			{
-				aplay->Write(ad->data, ad->length);
-				PlayerUtility::Get()->udp->SendTo((char*)ad->data, "127.0.0.1", 6001);
-				//fwrite(pcm, len, 1, fp);
-				ad->Drop();
-				break;
+				QThread::msleep(1);
+				continue;
 			}
+			QByteArray data = pcmBA.left(periodSize);
+			pcmBA = pcmBA.remove(0, periodSize);
+			aplay->Write(data.data(), periodSize);
+			PlayerUtility::Get()->justWritePts = decode->pts + (PlayerUtility::Get()->GetNowMs() - recordTime);
 			QThread::msleep(1);
 		}
-		QThread::msleep(1);
-		qDebug() << adlist.size();
 	}
 }
 

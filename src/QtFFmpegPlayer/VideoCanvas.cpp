@@ -40,7 +40,9 @@ const char* tString = GET_STR(
 		0, -0.39465, 2.03211,
 		1.13983, -0.58060, 0.0
 		)* yuv;
-		
+		//º∆À„ª“∂»
+		//float gray = rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114;
+		//gl_FragColor = vec4(gray, gray, gray, 1.0);
 		gl_FragColor = vec4(rgb, 1.0);
 	}
 );

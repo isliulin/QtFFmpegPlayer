@@ -28,18 +28,17 @@ void QtFFmpegPlayer::showEvent(QShowEvent *event)
 	
 	bool isOpenSuccess = false;
 
-	QByteArray ba = qgetenv("VIDEO_PATH");
-	if (ba.isEmpty())
+	QByteArray path = qgetenv("VIDEO_PATH");
+	if (path.isEmpty())
 	{
-		isOpenSuccess = player->Open(ui.video, "F:/HTTPServer/Faded.mp4");
+		isOpenSuccess = player->Open(ui.video, "D:/HTTPServer/Faded.mp4");
 		//isOpenSuccess = player->Open(ui.video, "https://www.sttplay.com/assets/Faded.mp4");
 	}
 	else
 	{
-		qDebug() << ba.constData();
-		isOpenSuccess = player->Open(ui.video, ba.constData());
+		qDebug() << path.constData();
+		isOpenSuccess = player->Open(ui.video, path.constData());
 	}
-	
 
 	if (!isOpenSuccess) return;
 

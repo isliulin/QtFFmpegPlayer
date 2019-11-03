@@ -23,7 +23,7 @@ bool AudioPlay::Open(int sampleRate, int channels)
 	fmt.setChannelCount(channels);
 	fmt.setCodec("audio/pcm");
 	fmt.setByteOrder(QAudioFormat::LittleEndian);
-	fmt.setSampleType(QAudioFormat::UnSignedInt);
+	fmt.setSampleType(QAudioFormat::SignedInt);
 
 	mutex.lock();
 	output = new QAudioOutput(fmt);
@@ -74,7 +74,7 @@ int AudioPlay::GetPeriodSize()
 }
 
 //把数据写入音频缓冲区
-bool AudioPlay::Write(unsigned char* data, int dataSize)
+bool AudioPlay::Write(char* data, int dataSize)
 {
 	if (!data || data <= 0)return false;
 	QMutexLocker locker(&mutex);
@@ -87,7 +87,6 @@ bool AudioPlay::Write(unsigned char* data, int dataSize)
 	return true;
 }
 
-
 //返回还未播放的时间ms
 long long AudioPlay::GetNoPlayMs()
 {
@@ -96,6 +95,20 @@ long long AudioPlay::GetNoPlayMs()
 	long long ms = 0;
 	//还未播放的字节数
 	double size = output->bufferSize() - output->bytesFree();
+	//1秒音频字节大小
+	double secSize = sampleRate * (sampleSize / 8) * channels;
+	if (secSize <= 0) ms = 0;
+	else ms = (size / secSize) * 1000;
+	return ms;
+}
+
+long long AudioPlay::GetPeriodMs()
+{
+	QMutexLocker locker(&mutex);
+	if (!output) return 0;
+	long long ms = 0;
+	//还未播放的字节数
+	double size = output->periodSize();
 	//1秒音频字节大小
 	double secSize = sampleRate * (sampleSize / 8) * channels;
 	if (secSize <= 0) ms = 0;

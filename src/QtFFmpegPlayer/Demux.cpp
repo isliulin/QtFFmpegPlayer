@@ -6,6 +6,7 @@ extern "C"
 {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
+#include <libavdevice/avdevice.h>
 }
 
 
@@ -37,8 +38,24 @@ bool Demux::Open(const char* url)
 	//网络延时时间
 	av_dict_set(&opts, "max_delay", "500", 0);
 
+	/*avdevice_register_all();
+
+	AVFormatContext *pFormatCtx = avformat_alloc_context();
+	AVInputFormat *ifmt = av_find_input_format("vfwcap");
+	avformat_open_input(&pFormatCtx, 0, ifmt, NULL);
+	//或者
+	AVFormatContext *pFormatCtx = avformat_alloc_context();
+	AVInputFormat *ifmt = av_find_input_format("dshow");
+	avformat_open_input(&pFormatCtx, "video=Integrated Camera", ifmt, NULL);*/
+
+
 	QMutexLocker locker(&mutex);
 	int ret = avformat_open_input(&afc, url, NULL, &opts);
+	if (!afc || afc->nb_streams < 2)
+	{
+		qDebug() << "not support this file! " << url;
+		return false;
+	}
 	if (ret != 0)
 	{
 		PlayerUtility::Get()->av_strerror2(ret, url);

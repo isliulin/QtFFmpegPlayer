@@ -28,5 +28,7 @@ private:
 	std::list<struct AudioData*> adlist;
 
 	void PlayAudioThread();
+	
+	QByteArray pcmBA;
 };
 

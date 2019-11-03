@@ -72,9 +72,9 @@ void Player_1_0::run()
 		}
 		if (demux->IsVideo(pkt))
 		{
-			/*if(video)
-				video->Push(pkt);*/
-			av_packet_free(&pkt);
+			if(video)
+				video->Push(pkt);
+			//av_packet_free(&pkt);
 		}
 		else
 		{

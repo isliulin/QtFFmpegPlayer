@@ -19,6 +19,7 @@ extern "C"
 #pragma  comment(lib, "avcodec.lib")
 #pragma  comment(lib, "avutil.lib")
 #pragma  comment(lib, "swresample.lib")
+#pragma  comment(lib, "avdevice.lib")
 
 class DrawYUV : public QThread
 {
@@ -77,7 +78,7 @@ public:
 		AudioPlay ap;
 		ap.Open(sampleRate, channels);
 		int size = ap.GetPeriodSize();
-		unsigned char *buf = new unsigned char[size];           //创建缓冲区buf
+		char *buf = new char[size];           //创建缓冲区buf
 		FILE *fp = fopen(url, "rb"); //打开音频文件audio1.pcm获取文件指针fp。r是以只读方式打开资源,b是不转义数据,就是不认转义字符,告诉函数库打开的文件为二进制文件，而非纯文字文件。注意如果写成FILE *fp = fopen("audio1.pcm", "r")会播放不了音频文件
 		while (!feof(fp)) //测试文件指针是否到了文件结束的位置。也就是判断音频文件audio1.pcm是否读完了
 		{
@@ -97,15 +98,18 @@ public:
 		fclose(fp);          //关闭文件描述符fp
 		ap.Close();
 	}
-
-
 };
+
 int main(int argc, char *argv[])
 {
 	if (argc > 1)
 	{
 		qputenv("VIDEO_PATH", QByteArray(argv[1]));
 	}
+
+	
+	PlayPCM pp;
+	pp.Play1("D:/Test/faded.pcm", 44100, 2);
 
 	QApplication a(argc, argv);
 	QtFFmpegPlayer w;

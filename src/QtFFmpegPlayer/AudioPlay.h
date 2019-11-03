@@ -25,10 +25,13 @@ public:
 	int GetPeriodSize();
 
 	//把数据写入音频缓冲区
-	bool Write(unsigned char* data, int dataSize);
+	bool Write(char* data, int dataSize);
+
 	
 	//返回还未播放的时间ms
 	long long GetNoPlayMs();
+
+	long long GetPeriodMs();
 private:
 	QMutex mutex;
 	QAudioOutput *output = NULL;

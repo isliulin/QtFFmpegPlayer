@@ -16,7 +16,7 @@ UDPReceiver::UDPReceiver(QObject *parent)
 
 UDPReceiver::~UDPReceiver()
 {
-	qDebug() << "close udp !!";
+	qDebug() << "close udp server";
 }
 
 void UDPReceiver::SendTo(QByteArray msg, QString host, int port)
