@@ -51,16 +51,17 @@ bool Demux::Open(const char* url)
 
 	QMutexLocker locker(&mutex);
 	int ret = avformat_open_input(&afc, url, NULL, &opts);
-	if (!afc || afc->nb_streams < 2)
-	{
-		qDebug() << "not support this file! " << url;
-		return false;
-	}
+	
 	if (ret != 0)
 	{
 		PlayerUtility::Get()->av_strerror2(ret, url);
 		return false;
 	}
+	/*if (!afc || afc->nb_streams < 2)
+	{
+		qDebug() << "not support this file! " << url;
+		return false;
+	}*/
 	//获取流信息
 	ret = avformat_find_stream_info(afc, NULL);
 	if (ret < 0)
@@ -79,6 +80,7 @@ bool Demux::Open(const char* url)
 	qDebug() << "width:" << afc->streams[videoStreamIndex]->codecpar->width;
 	qDebug() << "height:" << afc->streams[videoStreamIndex]->codecpar->height;
 	//YUV420P YUV422之类的东西
+	//AVPixelFormat
 	qDebug() << "format:" << afc->streams[videoStreamIndex]->codecpar->format;
 	//H264, H265 之类的东西
 	qDebug() << "codec id:" << afc->streams[videoStreamIndex]->codecpar->codec_id;

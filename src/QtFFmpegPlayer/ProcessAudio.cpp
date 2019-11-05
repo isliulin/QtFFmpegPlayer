@@ -81,7 +81,7 @@ void ProcessAudio::Push(AVPacket* pkt)
 void ProcessAudio::run()
 {
 
-	bool isWritePCM2file = true;
+	bool isWritePCM2file = false;
 	FILE* fp = NULL;
 	if (isWritePCM2file)
 	{

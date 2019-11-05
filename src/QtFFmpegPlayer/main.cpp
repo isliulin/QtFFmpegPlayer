@@ -10,6 +10,7 @@
 #include "AudioPlay.h"
 #include "ProcessAudio.h"
 #include "ProcessVideo.h"
+#include "DrawYUV.h"
 
 extern "C"
 {
@@ -21,54 +22,7 @@ extern "C"
 #pragma  comment(lib, "swresample.lib")
 #pragma  comment(lib, "avdevice.lib")
 
-class DrawYUV : public QThread
-{
 
-public:
-	VideoCanvas* video;
-	unsigned char *yuv[3] = { 0 };
-	FILE *fp = NULL;
-	bool isExist = false;
-
-	void Init()
-	{
-		video->Init(768, 432);
-		fp = fopen("F:/Http/Faded_yuv420p_768x432.yuv", "rb");
-		if (!fp)
-		{
-			qDebug() << "open file failed";
-		}
-		yuv[0] = new unsigned char[768 * 432];
-		yuv[1] = new unsigned char[768 * 432 / 4];
-		yuv[2] = new unsigned char[768 * 432 / 4];
-	}
-	~DrawYUV()
-	{
-		isExist = true;
-		video->isExit = true;
-		wait();
-	}
-protected:
-	void run()
-	{
-		for (;;)
-		{
-			if(isExist) break;
-			if (feof(fp) != 0)
-			{
-				fseek(fp, 0, SEEK_SET);
-				qDebug() << "read end";
-			}
-
-			fread(yuv[0], 1, 768 * 432, fp);
-			fread(yuv[1], 1, 768 * 432 / 4, fp);
-			fread(yuv[2], 1, 768 * 432 / 4, fp);
-
-			video->Repaint(yuv);
-
-		}
-	}
-};
 class PlayPCM
 {
 public:
@@ -107,13 +61,19 @@ int main(int argc, char *argv[])
 		qputenv("VIDEO_PATH", QByteArray(argv[1]));
 	}
 
-	
-	PlayPCM pp;
-	pp.Play1("D:/Test/faded.pcm", 44100, 2);
+	//PlayPCM pp;
+	//pp.Play1("D:/Test/faded.pcm", 44100, 2);
 
 	QApplication a(argc, argv);
-	QtFFmpegPlayer w;
-	w.show();
+	/*QtFFmpegPlayer w;
+	w.show();*/
+
+	DrawYUV *canvas = new DrawYUV(FragmentType::I420, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.yuv");
+	//DrawYUV *canvas = new DrawYUV(FragmentType::NV12, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv12");
+	//DrawYUV *canvas = new DrawYUV(FragmentType::NV21, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv21");
+	canvas->show();
+	canvas->InitializeCanvas();
+	canvas->start();
 	
 	return a.exec();
 }

@@ -118,7 +118,7 @@ void VideoCanvas::Init(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	//创建材质空间(显卡空间）
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
 
 	//U
 	glBindTexture(GL_TEXTURE_2D, texs[1]);
@@ -126,7 +126,7 @@ void VideoCanvas::Init(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	//创建材质空间(显卡空间）
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width / 2, height / 2, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width / 2, height / 2, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
 
 	//V
 	glBindTexture(GL_TEXTURE_2D, texs[2]);
@@ -135,7 +135,7 @@ void VideoCanvas::Init(int width, int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	//创建材质空间(显卡空间）
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width / 2, height / 2, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width / 2, height / 2, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
 }
 
 void VideoCanvas::Repaint(AVFrame *frame)
@@ -216,7 +216,7 @@ void VideoCanvas::paintGL()
 	glBindTexture(GL_TEXTURE_2D, texs[0]);
 	//glPixelStorei(GL_UNPACK_ROW_LENGTH, linesize[0]);
 	//修改材质内容
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED, GL_UNSIGNED_BYTE, datas[0]);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_LUMINANCE, GL_UNSIGNED_BYTE, datas[0]);
 	//与shader变量关联
 	glUniform1i(unis[0], 0);
 
@@ -227,7 +227,7 @@ void VideoCanvas::paintGL()
 	glBindTexture(GL_TEXTURE_2D, texs[1]);
 	//glPixelStorei(GL_UNPACK_ROW_LENGTH, linesize[1]);
 	//修改材质内容
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width / 2, height / 2, GL_RED, GL_UNSIGNED_BYTE, datas[1]);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width / 2, height / 2, GL_LUMINANCE, GL_UNSIGNED_BYTE, datas[1]);
 	//与shader变量关联
 	glUniform1i(unis[1], 1);
 
@@ -239,7 +239,7 @@ void VideoCanvas::paintGL()
 	glBindTexture(GL_TEXTURE_2D, texs[2]);
 	//glPixelStorei(GL_UNPACK_ROW_LENGTH, linesize[2]);
 	//修改材质内容
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width / 2, height / 2, GL_RED, GL_UNSIGNED_BYTE, datas[2]);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width / 2, height / 2, GL_LUMINANCE, GL_UNSIGNED_BYTE, datas[2]);
 	//与shader变量关联
 	glUniform1i(unis[2], 2);
 
