@@ -293,6 +293,8 @@ void VideoCanvas::initializeGL()
 	unis[0] = program.uniformLocation("tex_y");
 	unis[1] = program.uniformLocation("tex_u");
 	unis[2] = program.uniformLocation("tex_v");
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
 void VideoCanvas::resizeGL(int w, int h)

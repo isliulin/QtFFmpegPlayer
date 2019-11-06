@@ -158,6 +158,7 @@ void DrawYUV::InitializeCanvas()
 }
 void DrawYUV::run()
 {
+	
 	while (!isExit)
 	{
 		if (isDrawing)
@@ -169,7 +170,6 @@ void DrawYUV::run()
 		if (feof(fp) != 0)
 		{
 			fseek(fp, 0, SEEK_SET);
-			qDebug() << "read end";
 		}
 
 		if (crtFragmentType == I420)
@@ -177,6 +177,7 @@ void DrawYUV::run()
 			fread(datas[0], 1, width * height, fp);
 			fread(datas[1], 1, width * height / 4, fp);
 			fread(datas[2], 1, width * height / 4, fp);
+
 		}
 		else if (crtFragmentType == NV12 || crtFragmentType == NV21)
 		{
@@ -184,10 +185,9 @@ void DrawYUV::run()
 			fread(datas[1], 1, width * height / 2, fp);
 		}
 
-
 		update();
 		isDrawing = true;
-		QThread::msleep(2);
+		QThread::msleep(1);
 	}
 
 }
@@ -254,7 +254,7 @@ void DrawYUV::initializeGL()
 		unis[0] = program.uniformLocation("tex_y");
 		unis[1] = program.uniformLocation("tex_uv");
 	}
-
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 }
 
 

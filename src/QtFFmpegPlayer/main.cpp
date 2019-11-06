@@ -54,26 +54,26 @@ public:
 	}
 };
 
+#pragma pack(4)
 int main(int argc, char *argv[])
 {
 	if (argc > 1)
 	{
 		qputenv("VIDEO_PATH", QByteArray(argv[1]));
 	}
-
 	//PlayPCM pp;
 	//pp.Play1("D:/Test/faded.pcm", 44100, 2);
 
 	QApplication a(argc, argv);
-	/*QtFFmpegPlayer w;
-	w.show();*/
+	QtFFmpegPlayer w;
+	w.show();
 
-	DrawYUV *canvas = new DrawYUV(FragmentType::I420, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.yuv");
-	//DrawYUV *canvas = new DrawYUV(FragmentType::NV12, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv12");
-	//DrawYUV *canvas = new DrawYUV(FragmentType::NV21, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv21");
-	canvas->show();
-	canvas->InitializeCanvas();
-	canvas->start();
+	//DrawYUV *canvas = new DrawYUV(FragmentType::I420, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.yuv");
+	////DrawYUV *canvas = new DrawYUV(FragmentType::NV12, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv12");
+	////DrawYUV *canvas = new DrawYUV(FragmentType::NV21, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv21");
+	//canvas->show();
+	//canvas->InitializeCanvas();
+	//canvas->start();
 	
 	return a.exec();
 }

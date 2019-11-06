@@ -10,7 +10,6 @@ extern "C"
 
 int PlayerUtility::GetCurrentAudioPTS()
 {
-	
 	return justWritePts - ap->GetNoPlayMs();
 }
 

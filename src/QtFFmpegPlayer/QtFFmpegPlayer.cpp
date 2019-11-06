@@ -31,8 +31,8 @@ void QtFFmpegPlayer::showEvent(QShowEvent *event)
 	QByteArray path = qgetenv("VIDEO_PATH");
 	if (path.isEmpty())
 	{
-		isOpenSuccess = player->Open(ui.video, "F:/下载中心/硕鼠下载/mv.mp4");
-		//isOpenSuccess = player->Open(ui.video, "https://www.sttplay.com/assets/Faded.mp4");
+		//isOpenSuccess = player->Open(ui.video, "F:/下载中心/硕鼠下载/新壶中天 - 崔子格.mp4");
+		isOpenSuccess = player->Open(ui.video, "https://www.sttplay.com/assets/Faded.mp4");
 	}
 	else
 	{
