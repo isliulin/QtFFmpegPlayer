@@ -34,6 +34,12 @@
     <Filter Include="Source Files\OpenGL">
       <UniqueIdentifier>{b5f72a15-ce2f-456a-aefb-72d8ef2eeb39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\OpenGL\DrawYUV">
+      <UniqueIdentifier>{52ed1f96-7fdb-4d29-b5a4-aedeebc988bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OpenGL\DrawYUV">
+      <UniqueIdentifier>{4b6b5606-4cea-4c4c-8eda-552e40e2d9f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,8 +87,26 @@
     <ClCompile Include="UDPReceiver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DrawYUV.cpp">
-      <Filter>Source Files\OpenGL</Filter>
+    <ClCompile Include="DrawI420.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawYUVBase.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawYV12.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawNV12.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawNV21.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawI422.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawYUV444P.cpp">
+      <Filter>Source Files\OpenGL\DrawYUV</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +143,6 @@
     <ClInclude Include="VideoCanvas2.h">
       <Filter>Header Files\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VideoCanvas3.h">
       <Filter>Header Files\OpenGL</Filter>
     </ClInclude>
@@ -143,8 +164,29 @@
     <ClInclude Include="Player_1_0.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DrawYUV.h">
-      <Filter>Header Files\OpenGL</Filter>
+    <ClInclude Include="DrawI420.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawYUVBase.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawYV12.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawNV12.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawNV21.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawI422.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawYUV444P.h">
+      <Filter>Header Files\OpenGL\DrawYUV</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

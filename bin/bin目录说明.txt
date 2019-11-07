@@ -5,3 +5,4 @@ CopyQtDLL.bat		复制Qt的dll文件，要把dllpath设置为自己的QT路径
 GetFFmpegFromNet.bat	从网络上下载FFmpeg的dll，要把dllpath设置为自己的FFmpeg动态库路径
 GetFFmpegFromLocal.bat	从本地获取FFmpeg的dll，要把dllpath设置为自己的FFmpeg动态库路径
 GetFFmpegDLL.exe		下载文件小程序
+UDPSendMsg.exe		多端口发送数据小工具

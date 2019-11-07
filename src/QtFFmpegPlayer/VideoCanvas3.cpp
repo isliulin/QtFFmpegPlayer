@@ -1,6 +1,4 @@
 #include "VideoCanvas3.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 #define GET_STR(x) #x
 #include <QTime>
 #include "PlayerUtility.h"
@@ -98,9 +96,9 @@ void VideoCanvas3::initializeGL()
 
 	//获取图片RGB数据
 	int width, height, nrChannels;
-	texRawData[0] = stbi_load("Image/tex2.jpg", &width, &height, &nrChannels, 0);
+	/*texRawData[0] = stbi_load("Image/tex2.jpg", &width, &height, &nrChannels, 0);
 	texRawData[1] = stbi_load("Image/tex3.jpg", &width, &height, &nrChannels, 0);
-	texRawData[2] = stbi_load("Image/tex4.jpg", &width, &height, &nrChannels, 0);
+	texRawData[2] = stbi_load("Image/tex4.jpg", &width, &height, &nrChannels, 0);*/
 	
 	QtConcurrent::run(this, &VideoCanvas3::run);
 }

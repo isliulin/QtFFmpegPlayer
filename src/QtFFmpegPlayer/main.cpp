@@ -2,19 +2,14 @@
 #include <QtWidgets/QApplication>
 #include <QDebug>
 #include <QThread>
-#include "Demux.h"
-#include "Decode.h"
-#include "VideoCanvas.h"
-#include "VideoCanvas2.h"
-#include "Resample.h"
 #include "AudioPlay.h"
-#include "ProcessAudio.h"
-#include "ProcessVideo.h"
-#include "DrawYUV.h"
+#include "Factory.h"
+#include "DrawYUVBase.h"
 
 extern "C"
 {
 #include <libavformat/avformat.h>
+
 }
 #pragma  comment(lib, "avformat.lib")
 #pragma  comment(lib, "avcodec.lib")
@@ -54,7 +49,6 @@ public:
 	}
 };
 
-#pragma pack(4)
 int main(int argc, char *argv[])
 {
 	if (argc > 1)
@@ -68,9 +62,12 @@ int main(int argc, char *argv[])
 	QtFFmpegPlayer w;
 	w.show();
 
-	//DrawYUV *canvas = new DrawYUV(FragmentType::I420, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.yuv");
-	////DrawYUV *canvas = new DrawYUV(FragmentType::NV12, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv12");
-	////DrawYUV *canvas = new DrawYUV(FragmentType::NV21, 852, 480, "F:/HTTPServer/ExcuseMe_852x480.nv21");
+	//DrawYUVBase *canvas = Factory::CreateCanvas(FragmentType::I420, "F:/HTTPServer/Faded.yuv", 768, 432);
+	//DrawYUVBase *canvas = Factory::CreateCanvas(FragmentType::YV12,"F:/HTTPServer/ExcuseMe_852x480.yv12", 852, 480);
+	//DrawYUVBase *canvas = Factory::CreateCanvas(FragmentType::NV12, "F:/HTTPServer/ExcuseMe_852x480.nv12", 852, 480);
+	//DrawYUVBase *canvas = Factory::CreateCanvas(FragmentType::NV21,"F:/HTTPServer/ExcuseMe_852x480.nv21", 852, 480);
+	//DrawYUVBase *canvas = Factory::CreateCanvas(FragmentType::YUV444P,"F:/HTTPServer/ExcuseMe_852x480.yuv444p", 852, 480);
+	//DrawYUVBase *canvas = Factory::CreateCanvas(FragmentType::I422, "F:/HTTPServer/ExcuseMe_852x480.yuv422p", 852, 480);
 	//canvas->show();
 	//canvas->InitializeCanvas();
 	//canvas->start();

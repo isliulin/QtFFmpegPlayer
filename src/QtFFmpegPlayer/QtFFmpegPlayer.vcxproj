@@ -116,7 +116,13 @@
     <ClCompile Include="AudioPlay.cpp" />
     <ClCompile Include="Decode.cpp" />
     <ClCompile Include="Demux.cpp" />
-    <ClCompile Include="DrawYUV.cpp" />
+    <ClCompile Include="DrawI422.cpp" />
+    <ClCompile Include="DrawNV12.cpp" />
+    <ClCompile Include="DrawNV21.cpp" />
+    <ClCompile Include="DrawYUV444P.cpp" />
+    <ClCompile Include="DrawYUVBase.cpp" />
+    <ClCompile Include="DrawI420.cpp" />
+    <ClCompile Include="DrawYV12.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerUtility.cpp" />
     <ClCompile Include="Player_1_0.cpp" />
@@ -143,14 +149,20 @@
     <ClInclude Include="AudioPlay.h" />
     <ClInclude Include="Decode.h" />
     <ClInclude Include="Demux.h" />
-    <ClInclude Include="DrawYUV.h" />
+    <ClInclude Include="DrawI422.h" />
+    <ClInclude Include="DrawNV12.h" />
+    <ClInclude Include="DrawNV21.h" />
+    <ClInclude Include="DrawYUV444P.h" />
+    <ClInclude Include="DrawYUVBase.h" />
+    <ClInclude Include="DrawI420.h" />
+    <ClInclude Include="DrawYV12.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="PlayerUtility.h" />
     <ClInclude Include="Player_1_0.h" />
     <ClInclude Include="ProcessAudio.h" />
     <ClInclude Include="ProcessBase.h" />
     <ClInclude Include="ProcessVideo.h" />
     <ClInclude Include="Resample.h" />
-    <ClInclude Include="stb_image.h" />
     <QtMoc Include="UDPReceiver.h">
       <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\..\..\include;.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtOpenGL;$(QTDIR)\include\QtMultimedia;$(QTDIR)\include\QtNetwork</IncludePath>
       <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_WIDGETS_LIB;QT_OPENGL_LIB;QT_MULTIMEDIA_LIB;QT_NETWORK_LIB</Define>

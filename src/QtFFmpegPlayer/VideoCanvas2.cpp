@@ -1,6 +1,6 @@
 #include "VideoCanvas2.h"
 #include "PlayerUtility.h"
-#include "stb_image.h"
+
 #include <QtConcurrent/QtConcurrent>
 #include <QMutexLocker>
 #define GET_STR(x) #x
@@ -48,7 +48,7 @@ VideoCanvas2::~VideoCanvas2() {}
 void VideoCanvas2::initializeGL()
 {
 	initializeOpenGLFunctions();
-	stbi_set_flip_vertically_on_load(true);
+	
 	qDebug() << "initializeOpenGLFunctions2";
 
 	glClearColor(0.2, 0, 0, 1);
@@ -80,9 +80,7 @@ void VideoCanvas2::initializeGL()
 	//unis[2] = glGetUniformLocation(shaderProgram, "tex3");
 
 	int width, height, nrChannels;
-	texRawData[0] = stbi_load("Image/tex2.jpg", &width, &height, &nrChannels, 0);
-	texRawData[1] = stbi_load("Image/tex3.jpg", &width, &height, &nrChannels, 0);
-	texRawData[2] = stbi_load("Image/tex4.jpg", &width, &height, &nrChannels, 0);
+
 
 	glGenTextures(3, texs);
 	//创建一个图像缓冲对象并获取ID
